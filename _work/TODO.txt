@@ -1,0 +1,4 @@
+2016-01-12
+* Radar-animering i osynk efter uppdatering (öppna/stäng)
+* Fel/varning när ingen kontakt med API'er
+*

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a792109d-503b-4a60-98f6-46191ea0eeef" name="vader.webstuff.se" url="http://vader.webstuff.se">
+        <fileTransfer host="ftpcluster.loopia.se" port="21" rootFolder="/vader.webstuff.se/public_html" username="webbstuff">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

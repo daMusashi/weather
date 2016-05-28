@@ -1,0 +1,38 @@
+#panel-footer {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-top: solid 3px $color-bg-weather-boxes;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  padding-top: 0em;
+  padding-bottom: 0.2em;
+
+  nav {
+
+    text-align: left;
+
+    a {
+      font-size: 1.1em;
+      padding: 0.2em;
+      padding-top: 0em;
+      padding-left: 0.4em;
+      padding-right: 0.4em;
+      float: left;
+      display: block;
+      color: #ddd;
+      text-decoration: none;
+
+      &.active {
+        background-color: $color-bg-weather-boxes;
+        color: #fff;
+      }
+    }
+  }
+
+  #footer-body {
+    padding: 0.2em;
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.5);
+    float:right;
+
+  }
+}

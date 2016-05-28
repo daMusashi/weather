@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG Test</title>
+
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="libs/d3.min.js"></script>
+    <script src="source/config.js"></script>
+    <script src="source/eventhandler.js"></script>
+    <script src="source/date.js"></script>
+    <script src="source/google.place.api.js"></script>
+    <script src="source/google.place.data.js"></script>
+    <script src="source/google.place.manager.js"></script>
+    <script src="source/smhi.forecast.api.js"></script>
+    <script src="source/smhi.forecast.data.js"></script>
+    <script src="source/smhi.forecast.data.item.js"></script>
+    <script src="source/smhi.forecast.data.day.js"></script>
+    <script src="source/d3.linechart.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/bootswatch.css">
+    <link rel="stylesheet" type="text/css" href="css/weather.css">
+    <style>
+        .axis path, .axis line
+        {
+            fill: none;
+            stroke: white;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text
+        {
+            font-family: 'Arial';
+            font-size: 13px;
+            color: white;
+        }
+        .tick
+        {
+            stroke-dasharray: 1, 2;
+        }
+        .bar
+        {
+            fill: FireBrick;
+        }
+    </style>
+
+    <script>
+        var place, viz, api;
+
+        $(document).ready(function(){
+
+        })
+
+        function apiloaded(){
+            start();
+        }
+
+        function start(){
+            place = new GooglePlaceAPI();
+            place.setOnChangeListener(platsChanged);
+            place.getPlaceFromCoord(59.3991737, 13.5190958);
+
+            api = new SMHIForecastAPI();
+            api.setOnChangeListener(dataChanged);
+
+            viz = new D3Linechart("viz");
+        }
+
+        function platsChanged(platsData){
+            console.log("plats hittad");
+            console.log(platsData);
+            api.update(platsData);
+        }
+
+        function dataChanged(data){
+            console.log("data ändrad");
+            console.log(data);
+            viz.vizDayNightNederbord(data);
+        }
+    </script>
+</head>
+<body>
+    <div id="viz"></div>
+
+</body>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPkWzKCNHOP_qJJbd15Wk8OmIrUcJvCjE&signed_in=true&callback=apiloaded" async defer></script>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Väder</title>
+    
+    <!-- jQuery CDN -->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Bootstrap main CSS + Bootswatch theme CSS (via SASS) -->
+    <link rel="stylesheet" href="css/bootswatch.css">
+
+    <!-- Bootstrap CDN - javascript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+
+    <!-- Custom theme CSS (med Bootswatch theme overrides) -->
+    <link rel="stylesheet" href="css/weather.css">
+
+    <script src="modernizr.js"></script>
+    <script src="api.parser.js"></script>
+    <script src="data.weather.js"></script>
+    <script src="ui.weather.js"></script>
+    <script src="ui.day.js"></script>
+    <script src="ui.manager.js"></script>
+    <script src="layout.js"></script>
+    <script src="app.js"></script>
+
+    <style>
+        table.weather-list td {
+            padding-right: 4px;
+        }
+
+    </style>
+
+    <!-- SVG -->
+    <style>
+        path {
+            stroke: steelblue;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        line {
+            stroke: black;
+        }
+
+        text {
+            font-family: Arial;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+    <div id="page">
+        <header id="header">
+            <h2 id="plats">Okänd plats</h2>
+        </header>
+
+        <main id="days" data-between-top="header" data-between-bottom="footer"></main>
+        <article id="details">Detaljer</article>
+
+        <footer id="footer">
+            footer
+        </footer>
+    </div>
+</body>
+</html>

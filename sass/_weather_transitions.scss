@@ -1,0 +1,37 @@
+#panel-map {
+  transition: left 1s;
+
+  #map-wrapper {
+    transition: box-shadow 1s;
+  }
+}
+
+#panel-radar {
+  transition: right 1s;
+
+  #radar-wrapper {
+    transition: box-shadow 1s;
+  }
+}
+
+#panel-heroes {
+  transition: left 1s, right 1s, opacity 1s;
+}
+
+#panel-days {
+  transition: left 1s, right 1s, opacity 1s;
+}
+#panel-radar {
+  transition: left 1s, right 1s, opacity 1s;
+}
+#panel-map {
+  transition: left 1s, right 1s, opacity 1s;
+}
+
+#panel-header {
+  transition: left 1s, right 1s, opacity 1s;
+}
+
+#plats {
+  transition: padding-left 1s;
+}

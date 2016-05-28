@@ -1,0 +1,33 @@
+@mixin backgroundGrad($color1, $color2) {
+  background-color: $color1;
+  background: linear-gradient($color1, $color2);
+}
+
+@mixin backgroundGradDark($color) {
+  background-color: $color;
+  background: linear-gradient($color, darken($color, 20%));
+}
+
+@mixin backgroundGradDarkUp($color) {
+  background-color: $color;
+  background: linear-gradient(darken($color, 20%), $color);
+}
+
+@mixin backgroundGrad23dark($color) {
+  background-color: $color;
+  background: linear-gradient($color, $color, darken($color, 20%));
+}
+
+@mixin backgroundGrad23darkUp($color) {
+  background-color: $color;
+  background: linear-gradient(darken($color, 20%), darken($color, 20%), $color);
+}
+
+@mixin cover() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+}

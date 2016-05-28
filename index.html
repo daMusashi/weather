@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Väderprogros från SMHI</title>
+
+    <link rel="stylesheet" type="text/css" href="css/bootswatch.css">
+    <link rel="stylesheet" type="text/css" href="css/weather.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+    <script src="libs/iscroll.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPkWzKCNHOP_qJJbd15Wk8OmIrUcJvCjE&signed_in=true&callback=apiloaded" async defer></script>
+    <script src="weather.min.js"></script>
+</head>
+<body>
+    <div id="backdrop" class="winter day"></div>
+    <div id="frame">
+        <header id="panel-header" class="panel panel flex-panel flex-item"></header>
+        <region id="panel-heroes" class="panel flex-panel flex-item"></region>
+        <region id="panel-days" class="panel flex-item">
+            <div id="days-container" class="inner flex-panel"></div>
+        </region>
+        <footer id="panel-footer" class="panel flex-panel flex-item"></footer>
+
+        <aside id="panel-map" class="panel side-panel"></aside>
+        <aside id="panel-radar" class="panel side-panel"></aside>
+    </div>
+</body>
+<script>
+
+</script>
+</html>

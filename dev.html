@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Väderprogros från SMHI</title>
+
+    <link rel="stylesheet" type="text/css" href="css/bootswatch.css">
+    <link rel="stylesheet" type="text/css" href="css/weather.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+    <script src="libs/d3.min.js"></script>
+    <script src="libs/iscroll.js"></script>
+    <script src="source/config.js"></script>
+    <script src="source/eventhandler.js"></script>
+    <script src="source/date.js"></script>
+    <script src="source/ui.factory.js"></script>
+    <script src="source/google.place.api.js"></script>
+    <script src="source/google.place.data.js"></script>
+    <script src="source/google.map.api.js"></script>
+    <script src="source/google.map.ui.js"></script>
+    <script src="source/google.place.manager.js"></script>
+    <script src="source/smhi.radar.ui.js"></script>
+    <script src="source/smhi.radar.api.js"></script>
+    <script src="source/canvas.sprite.js"></script>
+    <script src="source/ui.header.js"></script>
+    <script src="source/ui.footer.js"></script>
+    <script src="source/ui.weather.icon.js"></script>
+    <script src="source/smhi.forecast.manager.js"></script>
+    <script src="source/smhi.forecast.api.js"></script>
+    <script src="source/smhi.forecast.data.js"></script>
+    <script src="source/smhi.forecast.data.item.js"></script>
+    <script src="source/smhi.forecast.data.day.js"></script>
+    <script src="source/smhi.forecast.ui.js"></script>
+    <script src="source/smhi.forecast.ui.weahterpanel.js"></script>
+    <script src="source/smhi.forecast.ui.day.js"></script>
+    <script src="source/smhi.forecast.ui.item.factory.js"></script>
+    <script src="source/smhi.forecast.ui.item.list.js"></script>
+    <script src="source/smhi.forecast.ui.item.big.js"></script>
+    <script src="source/smhi.forecast.ui.item.hero.js"></script>
+    <script src="source/smhi.forecast.ui.nederbordinfo.js"></script>
+    <script src="source/ui.dialogs.js"></script>
+    <script src="source/ui.js"></script>
+    <script src="source/ui.windarrow.js"></script>
+    <script src="source/d3.linechart.js"></script>
+    <script src="source/app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPkWzKCNHOP_qJJbd15Wk8OmIrUcJvCjE&signed_in=true&callback=apiloaded" async defer></script>
+</head>
+<body>
+    <div id="backdrop" class="winter day"></div>
+    <div id="frame">
+        <header id="panel-header" class="panel panel flex-panel flex-item"></header>
+        <region id="panel-heroes" class="panel flex-panel flex-item"></region>
+        <region id="panel-days" class="panel flex-item">
+            <div id="days-container" class="inner flex-panel"></div>
+        </region>
+        <footer id="panel-footer" class="panel flex-panel flex-item"></footer>
+
+        <aside id="panel-map" class="panel side-panel"></aside>
+        <aside id="panel-radar" class="panel side-panel"></aside>
+    </div>
+</body>
+<script>
+
+</script>
+</html>

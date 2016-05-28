@@ -1,0 +1,52 @@
+// Bottswatch overides
+//"OVERRIDA" I Bootswatchs varaibles.scss !!!
+
+$color-bg-weather-boxes: #253545;
+$color-body:         lighten($color-bg-weather-boxes, 15%); // org #2B3E50;
+$color-body-grad-lighter:         lighten($color-body, 20%);
+$color-body-grad-darker:          darken($color-body, 10%);
+
+$color-hero:         #6E4F78;
+
+$color-text: rgb(255, 255, 255);
+$color-text-mild: rgba(255, 255, 255, 0.5);
+
+$color-cold-text: #A9DEF5;
+$color-hot-text: #ec971f;
+$color-warning-text: #FA7E55;
+
+//$color-bg-weather-boxes: $gray-light;
+
+
+$color-hero-1:         $color-hero;
+$color-hero-2:         lighten($color-hero-1, 10%);
+$color-hero-3:         lighten($color-hero-2, 10%);
+$color-hero-4:         lighten($color-hero-3, 10%);
+
+
+
+// layout
+$panel-gutter: 5px;
+$weather-panel-min-width: 140px;
+$days-scroller-breakpoint: 10*$weather-panel-min-width + 9*$panel-gutter;
+// alla avstånd med min gäller för small och bör/kan växa med media-quiery
+$frames-min-margin: 0em;
+$header-min-title-height: 1.2em; // plussas på vid breakpoints (header-height blir * 1.5 som används för layout)
+$header-height-title-factor: 1.8; // faktorn som aplliceras på $header-min-title-height för att få haeder-height
+//$footer-min-height: 2em;
+$days-height: 2em;
+
+$body-gutter-lg: 15px;
+$body-gutter-md: $body-gutter-lg;
+$body-gutter-sd: 8px;
+$body-gutter-xsd: 0px;
+
+// sidepanels
+$sidepanel-button-size: 80px;
+$sidepanel-button-padding: 3px;
+
+// map
+$map-width: 480px;
+
+// radar
+$radar-width: 480px;
