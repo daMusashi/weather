@@ -14,7 +14,7 @@ function Windarrow(arrowSize, angleRadianer, arrColor, cirColor){
     //var arrowColor = arrColor || "#fff";
 
     var arrowColor = arrColor;
-    var circleColor = cirColor || "#333";
+    var circleColor = cirColor || arrColor;
 
     this.canvas = document.createElement("canvas");
     $(this.canvas).addClass("windarrow");
@@ -37,12 +37,12 @@ function Windarrow(arrowSize, angleRadianer, arrColor, cirColor){
 
     // ritar
     // cirkel
-    /*ctx.beginPath();
+    ctx.beginPath();
     ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI, false);
-    //ctx.strokeStyle = circleColor;
+    ctx.strokeStyle = circleColor;
     ctx.fillStyle = circleColor;
-    //ctx.stroke();
-    ctx.fill();*/
+    ctx.stroke();
+    //ctx.fill();
 
     ctx.beginPath();
     ctx.moveTo(arrowPoints[0][0] + size/2, arrowPoints[0][1] + size/2);

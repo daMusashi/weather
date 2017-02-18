@@ -14,6 +14,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/_work" />
       <excludeFolder url="file://$MODULE_DIR$/css" />
+      <excludeFolder url="file://$MODULE_DIR$/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/sass/.sass-cache" />
     </content>
     <orderEntry type="inheritedJdk" />
