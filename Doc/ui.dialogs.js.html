@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ui.dialogs.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ui.dialogs.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2016-01-09.
+ */
+function UIDialogFactory() {
+
+}
+
+UIDialogFactory.getErrorModalDOM = function(message){
+    var buttons = [this._getCloseButton()];
+    var dom = UIDialogFactory._getDialogBaseDOM("error-modal", "error", "Ett fel har uppstått", message, buttons);
+    return dom;
+};
+
+UIDialogFactory.getMessageModalDOM = function(title, message){
+    var dom = UIDialogFactory._getMessageBase("message-modal-place-notfound", title, message);
+    return dom;
+};
+
+UIDialogFactory.getWaitModalDOM = function(message){
+    var dom = UIDialogFactory._getDialogBaseDOM("wait-modal", "wait", message);
+    $(dom).attr("data-backdrop", "false");
+    return dom;
+};
+
+UIDialogFactory._getDialogBaseDOM = function(id, type, dia_html, dia_title, buttonsArray) {
+    var buttons = buttonsArray || [];
+    var titleText = dia_title || null;
+    id = id + "-" + type;
+    var dom;
+
+    if(dom = document.getElementById(id)) {
+
+        if (titleText) {
+            $(title).text(titleText);
+            $(header).css("display", "block");
+        } else {
+            $(header).css("display", "none");
+        }
+        $("#" + id + " .modal-body").html(dia_html);
+
+    } else {
+
+        dom = document.createElement('div');
+        $(dom).attr("id", id);
+        $(dom).addClass("modal");
+        $(dom).addClass(type);
+        $(dom).addClass("fade");
+        $(dom).attr("role", "dialog");
+
+        var dom2 = document.createElement('div');
+        $(dom2).attr("class", "modal-dialog");
+        dom.appendChild(dom2);
+
+        var closeButton = document.createElement('button');
+        $(closeButton).attr("class", "close");
+        $(closeButton).attr("type", "button");
+        $(closeButton).attr("data-dismiss", "modal");
+        $(closeButton).html("&amp;times;");
+
+        var content = document.createElement('div');
+        $(content).attr("class", "modal-content");
+        dom2.appendChild(content);
+
+        var body = document.createElement('div');
+        $(body).attr("class", "modal-body");
+        $(body).html(dia_html);
+
+        var header = document.createElement('div');
+        $(header).attr("class", "modal-header");
+        content.appendChild(header);
+
+        var title = document.createElement('h4');
+        $(title).attr("class", "modal-title");
+
+        header.appendChild(closeButton);
+        header.appendChild(title);
+
+        // gömmer header om ingen title
+        if (titleText) {
+            $(title).text(titleText);
+        } else {
+            $(header).css("display", "none");
+        }
+
+        content.appendChild(body);
+
+        if (buttons.length > 0) {
+            var footer = document.createElement('div');
+            $(footer).attr("class", "modal-footer");
+            content.appendChild(footer);
+
+            for (var i = 0; i &lt; buttons.length; i++) {
+                footer.appendChild(buttons[i]);
+            }
+        }
+
+        document.body.appendChild(dom);
+    }
+
+    return dom;
+};
+
+UIDialogFactory._getMessageBase = function(id, dia_title, dia_html){
+    var dom;
+
+    if(dom = document.getElementById(id)) {
+
+        $("#"+id+" .modal-title").text(dia_title);
+        $("#"+id+" .modal-body").text(dia_html);
+
+    } else {
+        dom = document.createElement('div');
+        $(dom).attr("id", id);
+        $(dom).attr("class", "modal fade");
+        $(dom).attr("role", "dialog");
+
+        var dom2 = document.createElement('div');
+        $(dom2).attr("class", "modal-dialog");
+        dom.appendChild(dom2);
+
+        var content = document.createElement('div');
+        $(content).attr("class", "modal-content");
+        dom2.appendChild(content);
+
+        var header = document.createElement('div');
+        $(header).attr("class", "modal-header");
+        content.appendChild(header);
+
+        var title = document.createElement('h4');
+        $(title).attr("class", "modal-title");
+        $(title).text(dia_title);
+        var button = document.createElement('button');
+        $(button).attr("class", "close");
+        $(button).attr("type", "button");
+        $(button).attr("data-dismiss", "modal");
+        $(button).html("&amp;times;");
+        header.appendChild(button);
+        header.appendChild(title);
+
+        var body = document.createElement('div');
+        $(body).attr("class", "modal-body");
+        $(body).html(dia_html);
+        content.appendChild(body);
+
+        var footer = document.createElement('div');
+        $(footer).attr("class", "modal-footer");
+        content.appendChild(footer);
+
+        var buttonC = UIDialogFactory._getCloseButton();
+        footer.appendChild(buttonC);
+
+        document.body.appendChild(dom);
+    }
+
+
+    return dom;
+};
+
+UIDialogFactory._getCloseButton = function(buttonTitle){
+    title = buttonTitle = "Stäng";
+
+    var button = document.createElement('button');
+    $(button).attr("class", "btn btn-default");
+    $(button).attr("type", "button");
+    $(button).attr("data-dismiss", "modal");
+    $(button).html(title);
+
+    return button;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

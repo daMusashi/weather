@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: smhi.forecast.data.day.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: smhi.forecast.data.day.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2015-12-11.
+ *
+ * Klassen håller prognospunkter som hör till samma dag (sortering per dag gör inte klassen själv)
+ */
+function SMHIForecastDay(){
+    this.daytimeHours = {min: 8, max: 20};
+    this.daytimeRepresentationHours = {min: 13, max: 14};
+
+    this.nighttimeHours = {min: 21, max: 7};
+    this.nighttimeRepresentationHours = {min: 1, max: 2};
+
+    this.date = null;
+    this.day = null;
+    this.isWeekend = null;
+
+    this.items = [];
+    this.dayItems = [];
+    this.nightItems = [];
+
+    this.daytimeItem = null;
+    this.nighttimeItem = null;
+
+    this.maxTemp = null;
+    this.minTemp = null;
+
+
+}
+
+SMHIForecastDay.prototype._update = function(){
+    if(this.items.length > 0) {
+        this.date = this.items[0].dateobject.getDateString();
+        this.day = this.items[0].dateobject.getDayName();
+        this.isWeekend = this.items[0].dateobject.isWeekend();
+
+        this.dayItems = []; // reset
+        this.nightItems = []; // reset
+
+        //console.log(this.date);
+        //console.log(this.items);
+
+        this.daytimeItem = null;
+        this.nighttimeItem = null;
+
+        for (i = 0; i &lt; this.items.length; i++) {
+
+            var hour = this.items[i].dateobject.getHours();
+
+            // day items
+            if (hour >= this.daytimeHours.min &amp;&amp; hour &lt;= this.daytimeHours.max) {
+                this.dayItems.push(this.items[i]);
+            }
+
+            // night items
+            if (hour >= this.nighttimeHours.min || hour &lt;= this.nighttimeHours.max) {
+                this.nightItems.push(this.items[i]);
+            }
+
+            // hero day item
+            if (hour >= this.daytimeRepresentationHours.min &amp;&amp; hour &lt;= this.daytimeRepresentationHours.max) {
+                this.daytimeItem = this.items[i];
+            }
+
+            // hero night item
+            if (hour >= this.nighttimeRepresentationHours.min &amp;&amp; hour &lt;= this.nighttimeRepresentationHours.max) {
+                this.nighttimeItem = this.items[i];
+            }
+        }
+    }
+
+}
+
+SMHIForecastDay.prototype.addItem = function(dataItem, doUpdate){
+    var update = doUpdate || true;
+
+    this.items.push(dataItem);
+
+    if(update) {
+        this._update();
+    }
+
+};
+
+SMHIForecastDay.prototype.addItems = function(dataItemsArray){
+    for(var i = 0; i &lt; dataItemsArray.length; i++) {
+        this.addItem(dataItemsArray[i], false);
+    }
+
+    this._update();
+};
+
+SMHIForecastDay.prototype.clear = function(){
+    this.items = [];
+}
+
+
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

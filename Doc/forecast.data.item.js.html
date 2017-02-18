@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: forecast.data.item.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: forecast.data.item.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2015-12-11.
+ */
+
+/**
+ * "Weahter item" huvudobjekt för datan - All väderdata för en viss tidpunkt, i regel ett heltimmesslag (t.ex 13.00)
+ * @param {string} datetimeUTC - Tidpunkten för vilken datan gäller
+ * @param {objekt} itemParameters - Ett objekt med all data från en datakälla (kust
+ * @constructor
+ */
+function ForecastDataItem(datetimeUTC, itemParameters){
+    //console.log(itemParameters);
+    this.datetimeRawUTC = datetimeUTC;
+    this.dateobject = new Date(datetimeUTC);
+    this.date = this.dateobject.getDateString();
+    this.time = this.dateobject.getTimeString();
+    var idBase = this.date + this.time;
+    this.id = idBase.replace(/\D/g,'');
+    this.day = this.dateobject.getDayName();
+
+    this.temp = null;
+    this.sikt = null;
+    this.vindRiktning = null;
+    this.vindHastighet = null;
+    this.vindByarHastighet = null;
+    this.nederbord = null;
+    this.nederbordMangd = null;
+    this.nederbordMangdMax = null;
+    this.nederbordMangdMin = null;
+    this.molnighet = null;
+    this.lufttryck = null;
+    this.luftfuktighet = null;
+    this.askSannolikhet = null;
+    this.vind = null;
+
+    this._data = [];
+
+    for(var i = 0; i &lt; itemParameters.length; i++){
+        var item = itemParameters[i];
+        // , datetime, temp, rain, snow, windStrengh, windDirection, lCloud, mCloud, hCloud, thunder
+        switch(item.name){
+            case "t": // Lufttemperatur på 2 meters höjd över marken
+                this.temp = new SMHIForecastAPIDataParameter("Temperatur", Math.round(item.values[0]), item.unit);
+                this._data.push(this.temp);
+                break;
+            case "vis": // Horisontell sikt på 10 meters höjd över havet, max 50?
+                this.sikt = new SMHIForecastAPIDataParameter("Sikt", item.values[0], item.unit);
+                this._data.push(this.sikt);
+                break;
+            case "wd": // wind direction grader
+                var windDircetionDegrees = item.values[0];
+                var cardinalDirections = [
+                    ['N', 337.5, 22.5],
+                    ['NE', 22.5, 67.5],
+                    ['E', 67.5, 112.5],
+                    ['SE', 112.5, 157.5],
+                    ['S', 157.5, 202.5],
+                    ['SW', 202.5, 247.5],
+                    ['W', 247.5, 292.5],
+                    ['NW', 292.5, 337.5]
+                ];
+
+                var direction;
+                for(var dir in cardinalDirections) {
+                    if (windDircetionDegrees >= dir[1] &amp;&amp; windDircetionDegrees &lt; dir[2]) {
+                        direction = dir[0];
+                        break;
+                    }
+                }
+                this.vindRiktning = new SMHIForecastAPIDataParameter("Vindriktning", windDircetionDegrees, item.unit, this.vindriktningToString(windDircetionDegrees));
+                this._data.push(this.vindRiktning);
+                break;
+            case "ws": // wind speed
+                this.vindHastighet = new SMHIForecastAPIDataParameter("Vindhastighet", item.values[0], item.unit, this.vindHastighetToString(item.values[0]));
+                this._data.push(this.vindHastighet);
+                break;
+            case "gust": // Byvindhastighet på 10 meters höjd över marken
+                this.vindByarHastighet = new SMHIForecastAPIDataParameter("Byvindhastighet", item.values[0], item.unit, this.vindHastighetToString(item.values[0]));
+                this._data.push(this.vindByarHastighet);
+                break;
+            case "hmsl": // Mean sea level pressure. Lufttryck omräknat till havsytans nivå
+                this.lufttryck = new SMHIForecastAPIDataParameter("Lufttryck", item.values[0], item.unit);
+                this._data.push(this.lufttryck);
+                break;
+            case "r": // Relativ luftfuktighet på 2 meters höjd över marken
+                this.luftfuktighet = new SMHIForecastAPIDataParameter("Luftfuktighet", item.values[0], item.unit);
+                this._data.push(this.luftfuktighet);
+                break;
+            case "tstm": // Sannolikhet för åska [%]
+                this.askSannolikhet = new SMHIForecastAPIDataParameter("Sannolikhet för åska", item.values[0], item.unit);
+                this._data.push(this.askSannolikhet);
+                break;
+            case "tcc_mean": // total molnighet octas (finns också uppdelad low, med, high)
+                var cover = item.values[0];
+                var tolkning;
+                switch(cover) {
+                    case 1:
+                    case 2:
+                        tolkning = "Mestadels klart";
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                        tolkning = "Halvklart";
+                        break;
+                    case 6:
+                    case 7:
+                        tolkning = "Nästan mulet";
+                        break;
+                    case 8:
+                        tolkning = "Mulet";
+                        break;
+                    default:
+                        cover = 0;
+                        tolkning = "Klart";
+                }
+                this.molnighet = new SMHIForecastAPIDataParameter("Molnighet", cover, item.unit, tolkning);
+                this._data.push(this.molnighet);
+                break;
+            case "pcat": // nederbördstyp
+                var cat = item.values[0];
+                var tolkning;
+                switch(cat){
+                    case 1:
+                        tolkning = "Snö";
+                        break;
+                    case 2:
+                        tolkning = "Snöblandat regn";
+                        break;
+                    case 3:
+                        tolkning = "Regn";
+                        break;
+                    case 4:
+                        tolkning = "Duggregn"; // drizzle
+                        break;
+                    case 5:
+                        tolkning = "Underkylt regn";
+                        break;
+                    case 6:
+                        tolkning = "Underkylt duggregn";
+                        break;
+                    default:
+                        tolkning = "";
+                        cat = 0;
+                }
+                this.nederbord = new SMHIForecastAPIDataParameter("Nederbörd", cat, item.unit, tolkning);
+                this._data.push(this.nederbord);
+                break;
+            case "pmean": // medel av nederbördsintensitet i kg/m2/h, kan användas som mm/h, se http://www.smhi.se/kunskapsbanken/meteorologi/hur-mats-nederbord-1.637
+                //this.nederbordMangd = new SMHIForecastAPIDataParameter("Nederbördsintensitet (medel)", item.values[0], item.unit);
+                this.nederbordMangd = new SMHIForecastAPIDataParameter("Nederbördsintensitet (medel)", item.values[0], "mm");
+                this._data.push(this.nederbordMangd);
+                //console.log("nedmängd (medel): "+this.nederbordMangd);
+                break;
+            case "pmax": // medel av nederbördsintensitet
+                this.nederbordMangdMax = new SMHIForecastAPIDataParameter("Nederbördsintensitet (max)", item.values[0], item.unit);
+                this._data.push(this.nederbordMangdMax);
+                //console.log("nedmängd (max): "+this.nederbordMangdMax);
+                break;
+            case "pmin": // medel av nederbördsintensitet
+                this.nederbordMangdMin = new SMHIForecastAPIDataParameter("Nederbördsintensitet (min)", item.values[0], item.unit);
+                this._data.push(this.nederbordMangdMin);
+                break;
+        }
+
+    }
+
+    this.vind = this.vindHastighet.value + " " + this.vindHastighet.unit + " " + this.vindriktningToString(this.vindRiktning.value) + "("+this.vindRiktning.value+")";
+}
+
+ForecastDataItem.prototype.vindriktningToString = function(degree){
+    //var val = Math.round((degree/45)+.5);
+    var val = Math.round((degree/45));
+    //console.log(val);
+    arr=["N", "NO", "O", "SO", "S", "SV", "V" ,"NV"];
+    return arr[(val % 8)] + "("+degree+")";
+};
+
+ForecastDataItem.prototype.vindHastighetToString = function(hastighet){
+    // tolkningar från http://www.smhi.se/kunskapsbanken/meteorologi/skalor-for-vindhastighet-1.252
+    var tolkning = "Vindstilla";
+    if(hastighet >= 0.3){
+        tolkning = "Svag vind";
+    }
+    if(hastighet >= 3.4){
+        tolkning = "Måttlig vind";
+    }
+    if(hastighet >= 8){
+        tolkning = "Frisk vind";
+    }
+    if(hastighet >= 13.9){
+        tolkning = "Hård vind";
+    }
+    if(hastighet >= 24.5){
+        tolkning = "Storm!";
+    }
+    if(hastighet >= 32.7){
+        tolkning = "ORKAN!!!";
+    }
+
+    return tolkning;
+};
+
+ForecastDataItem.prototype.toString = function(){
+    var out = "&lt;DATA ["+this.date+"|"+this.time+"] ";
+    for(var i = 0; i &lt; this._data.length; i++){
+        var param = this._data[i];
+        out += param.toString() + " ";
+    }
+    out += ">";
+    return out;
+};
+
+function SMHIForecastAPIDataParameter(label, value, unit, tolkning){
+    this.label = label;
+    this.value = value;
+    this.unit = unit || "?";
+    this.tolkning = tolkning || "";
+}
+
+SMHIForecastAPIDataParameter.prototype.toString = function(){
+    var tolkning;
+    if(this.tolkning != ""){
+        tolkning = "("+this.tolkning+")";
+    } else {
+        tolkning = "";
+    }
+    return this.label+":"+this.value+this.unit+tolkning;
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

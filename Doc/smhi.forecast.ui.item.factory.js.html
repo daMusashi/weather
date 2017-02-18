@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: smhi.forecast.ui.item.factory.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: smhi.forecast.ui.item.factory.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2015-12-12.
+ */
+function SMHIForecastUIItemFactory(dataItem){
+    this._data = dataItem;
+
+    this.dayDOM;
+    this.dateDOM; // datum
+    this.timeDOM;
+    this.iconDOM;
+    this.molnDescDOM;
+    this.nederbordDescDOM;
+    this.vindIconDOM;
+    this.vindDescDOM;
+}
+
+
+
+SMHIForecastUIItemFactory.prototype.getTdDOM = function(customClass){
+    customClass = customClass || null;
+
+    var wrapper = document.createElement("tr");
+    $(wrapper).addClass("weather-item");
+    $(wrapper).addClass("weather-item-list");
+    $(wrapper).addClass("list");
+    if(customClass){
+        $(wrapper).addClass(customClass);
+    }
+
+    //var icon = new WeatherIcon(100, this.data);
+
+    var time = this.createCommonValueDOM("td", this._data.time, "wr-time");
+    var temp = this.createCommonValueDOM("td", this._data.temp.value + "°", "wr-temp");
+    var vader = this.createCommonValueDOM("td", this._data.molnighet.tolkning, "wr-vader-desc");
+    if(this._data.nederbord.value > 0){
+        vader.innerHTML += " - " +this._data.nederbord.tolkning;
+    }
+
+    //icon.append(wrapper);
+    wrapper.appendChild(time);
+    wrapper.appendChild(temp);
+    wrapper.appendChild(vader);
+
+    return wrapper;
+};
+
+
+SMHIForecastUIItemFactory.prototype.createTempValueDOM = function(tag){
+    var classes = ["temperature", "weather-data"];
+    if(this._data.temp.value &lt; CONFIG.coldLimit){
+        classes.push("cold");
+    }
+    if(this._data.temp.value > CONFIG.warmLimit){
+        classes.push("hot");
+    }
+    return this.createCommonValueDOM(tag, this._data.temp.value + "°", classes);
+};
+SMHIForecastUIItemFactory.prototype.createCloudcoverValueDOM = function(tag){
+    return this.createCommonValueDOM(tag, this._data.molnighet.tolkning, ["cloudcover", "weather-data"]);
+};
+SMHIForecastUIItemFactory.prototype.createTimeValueDOM = function(tag){
+    return this.createCommonValueDOM(tag, this._data.time, ["time", "weather-data"]);
+};
+
+SMHIForecastUIItemFactory.prototype.createPrecipitationValueDOM = function(tag){
+    var desc = "";
+    var classes = ["precipitation", "weather-data"];
+    if(this._data.nederbord.value > 0){
+        desc = this._getNederbordMangdDesc(this._data.nederbordMangdMax.value, this._data.nederbord.tolkning);
+        //desc = desc + " ("+this.data.nederbordMangdMax.value+" "+this.data.nederbordMangdMax.unit+")";
+    } else {
+        classes.push("suppress");
+        desc = "Uppehåll";
+    }
+    var dom = this.createCommonValueDOM(tag, desc, classes);
+    return dom;
+};
+SMHIForecastUIItemFactory.prototype.createWindValueDOM = function(tag){
+    var mainDOM = document.createElement(tag);
+    $(mainDOM).addClass("weather-data");
+    $(mainDOM).addClass("wind");
+
+    var opacity = this._data.vindHastighet.value/14;
+    if(opacity &lt; 0.05){
+        opacity = 0.05;
+    }
+    if(opacity > 1){
+        opacity = 1;
+    }
+    var arrowDOM = document.createElement("span");
+    $(arrowDOM).addClass("wind-direction");
+    var arrowColor = "rgba("+CONFIG.colorWindArrow[0]+", "+CONFIG.colorWindArrow[1]+", "+CONFIG.colorWindArrow[2]+", "+opacity.toFixed(2)+")";
+    arrowDOM.appendChild(new Windarrow(15, this._data.vindRiktning.value*(Math.PI/180), arrowColor));
+    // skapar opactitet efter styrka, 14 m/s max (1) - börjar "hård vind", sedan varningfärger istället, 0.05 lägsta opacity
+
+    //$(arrowDOM).css("opacity", opacity);
+
+    //var riktningDOM = this.createCommonValueDOM("span", this.data.vindRiktning.tolkning, ["winddirection-cardinal"]);
+    var hastighetDOM = this.createCommonValueDOM("span", this._data.vindHastighet.tolkning, ["wind-speed"]);
+    if(this._data.vindHastighet.value &lt; CONFIG.supressWindUnder){
+        $(hastighetDOM).addClass("suppress");
+    }
+
+    var byhastighetDOM = this.createCommonValueDOM("span", this._data.vindByarHastighet.tolkning + " i byar!", ["wind-gustspeed"]);
+    $(byhastighetDOM).addClass("warning");
+    byhastighetDOM.innerHTML = "&lt;br>" + byhastighetDOM.innerHTML;
+
+    mainDOM.appendChild(arrowDOM);
+    //mainDOM.appendChild(riktningDOM);
+    mainDOM.appendChild(hastighetDOM);
+    if(this._data.vindHastighet.tolkning != this._data.vindByarHastighet.tolkning) {
+        if(this._data.vindByarHastighet.value > CONFIG.warnForByarAt) { // 14 stark vind
+            mainDOM.appendChild(byhastighetDOM);
+        }
+    }
+
+    return mainDOM;
+};
+
+SMHIForecastUIItemFactory.prototype.createIconDOM = function(big, simple){
+    var icon = new WeatherIcon(this._data, big, simple);
+    var iconWrapper = document.createElement("div");
+    $(iconWrapper).addClass("icon");
+    $(iconWrapper).addClass("weather-data");
+    iconWrapper.appendChild(icon);
+
+    return iconWrapper;
+};
+
+SMHIForecastUIItemFactory.prototype.createCommonValueDOM = function(tag, value, customClasses){
+    var classes = customClasses || [];
+    var dom = document.createElement(tag);
+    for(var i = 0; i &lt; classes.length; i++) {
+        $(dom).addClass(classes[i]);
+    }
+    $(dom).addClass("weather-data-value");
+    $(dom).text(value);
+
+    return dom;
+};
+
+/*
+ Baseras på vanlig klassifiering, se http://www.smhi.se/kunskapsbanken/meteorologi/nederbordsintensitet-1.19163
+ */
+SMHIForecastUIItemFactory.prototype._getNederbordMangdDesc = function(mangd, typ){
+    var adjektiv = "Lätt";
+    if(typ.toLowerCase() == "snö") {
+        // egen tolkning efter snabbstudier av data, termer från http://www.smhi.se/kunskapsbanken/meteorologi/nederbordsintensitet-1.19163
+        if (mangd > 0.2) {
+            adjektiv = "Måttligt";
+        }
+        if (mangd > 0.6) {
+            adjektiv = "Tätt";
+        }
+    } else {
+        // från http://www.smhi.se/kunskapsbanken/meteorologi/nederbordsintensitet-1.19163
+        if (mangd > 0.5) {
+            adjektiv = "Måttligt";
+        }
+        if (mangd > 4) {
+            adjektiv = "Starkt";
+        }
+    }
+    return adjektiv + " " + typ.toLowerCase();
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

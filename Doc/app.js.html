@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2015-12-27.
+ */
+
+$(document).ready(function(){
+    Weather.libsLoaded++;
+    console.log("Weather: Main Libs loaded ("+Weather.libsLoaded+"/"+Weather.libsToLoad+")");
+
+    if(Weather.libsLoaded == Weather.libsToLoad) {
+        Weather.init();
+    }
+})
+
+$(window).on("resize", function(){
+    Weather.ui.manageSizes();
+});
+
+// Google API kan vara färdigtladdat EFTER document.ready
+function apiloaded(){
+    Weather.libsLoaded++;
+    console.log("Weather: External Lib loaded ("+Weather.libsLoaded+"/"+Weather.libsToLoad+")");
+
+    if(Weather.libsLoaded == Weather.libsToLoad) {
+        Weather.init();
+    }
+
+}
+
+/**
+ * Appens main objekt. Statiskt objekt.
+ * @constructor
+ */
+function Weather(){}
+
+Weather.libsToLoad = 2;
+Weather.libsLoaded = 0;
+
+/**
+ * Initierar appen
+ */
+Weather.init = function(){
+    console.log("Weather: _app Init");
+
+    /**
+     * Håller UI
+     * @type {WeatherUI}
+     */
+    this.ui = new WeatherUI(this);
+    /**
+     * Håller aktuell plats
+     * @type {GooglePlaceManager}
+     */
+    this.plats = new GooglePlaceManager(this);
+    this.plats.setOnChangeListener(platsChanged);
+    /**
+     * Håller radarbild
+     * @type {SMHIRadarUI}
+     */
+    this.radar = new SMHIRadarUI(document.getElementById("panel-radar"));
+    //radar.start();
+    /**
+     * Håller UI Header
+     * @type {HeaderUI}
+     */
+    this.header = new HeaderUI(document.getElementById("panel-header"));
+    /**
+     * Håller UI Foter
+     * @type {FooterUI}
+     */
+    this.footer = new FooterUI(document.getElementById("panel-footer"));
+    /**
+     * Håller aktuellt dataset
+     * @type {ForecastManager}
+     */
+    this.forecast = new ForecastManager(this); // inner för scrollning
+    this.forecast.setOnChangeListener(forecastChanged);
+
+    /*radarUI = new SMHIRadarUI(document.getElementById("weather-heroes"), 300);
+     radarAPI = new SMHIRadarAPI(24, "start", radarUI);
+
+     radarAPI.update();*/
+
+    this.footer.updateTimers(this.footer);
+    setInterval(this.footer.updateTimers, 10*1000, this.footer);
+    setInterval(function(){this.forecast.update()}, 10*60*1000);
+
+    this.plats.findPlace();
+
+    this.ui.init();
+    this.ui.manageSizes();
+};
+
+/**
+ * Handler för när plats ändras
+ * @param {GooglePlaceData} placeData
+ */
+// När plats-data hämtats/ändrats
+function platsChanged(placeData){
+    console.log("Weather: Plats ändrad");
+    Weather.forecast.update(placeData);
+    Weather.header.setPlatsnamn(placeData.getString());
+    //UIDialogFactory.showError("hallå");
+}
+
+// när kartplats ändrats av user - aktiverar platsChanged
+function mapChanged(latLong){
+    console.log("MAP CHANGED");
+    this.ui.closeMap();
+    plats.setCoord(latLong.lat, latLong.long);
+}
+
+function forecastChanged(forecastData){
+    //console.log(forecastData);
+    Weather.footer.setForecastTime(forecastData.approvedTime);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

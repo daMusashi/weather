@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: smhi.radar.api.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: smhi.radar.api.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2015-12-10.
+ */
+
+function SMHIRadarAPI(numLatestRadars, onUpdatedListiner, onUpdatedListinerSource){
+    this.radars = [];
+    this.numLatestRadars = numLatestRadars;
+    this.listener = onUpdatedListiner || null;
+    this.listenerSource = onUpdatedListinerSource || null;
+}
+
+SMHIRadarAPI.prototype.update = function(){
+    var d = new Date();
+    var dString = d.getFullYear() + "/" + (d.getMonth()+1) + "/" + d.getDate();
+
+    var me = this; // skapar tillg�ng till "this" via "me" i event-anropade ("globalt" anropade) metoder
+
+    $.get( "http://opendata-download-radar.smhi.se/api/version/latest/area/sweden/product/comp/"+dString,
+        {
+            format: "png"
+        })
+        .done(function( data ) {
+            //console.log("radar-data har laddats");
+            //console.log(data);
+
+            var radarImgNum = me.numLatestRadars; // var 5:e minut = 60 mmin -> 12 bilder
+            if(data.files.length &lt; me.numLatestRadars){
+                radarImgNum = data.files.length;
+            }
+
+            for(var i = 0; i &lt; radarImgNum; i++){
+                var imgObj = data.files[data.files.length-1-i].formats[0];
+                var radar = new SMHIRadarMap(imgObj.updated, imgObj.link);
+                me.radars.push(radar);
+            }
+            me.radars.reverse(); // l�gger r�tt igen kronologiskt
+            //console.log(radars);
+
+            if(me.listener) {
+                if (me.listenerSource) {
+                    me.listener.call(me.listenerSource, me.radars);
+                } else {
+                    me.listener(me.radars);
+                }
+            }
+        })
+        .fail(function() {
+            // TODO kan vara att data f�r dagen inte existerar �n, prova med f�rg�ende dag
+            // inte bara att g�ra med dag - 1, kan bli loop
+
+            console.log( "VARNING! Kunde inte h�mta radar-data fr�n SMHI" );
+        });
+};
+
+function SMHIRadarMap(time, imgUrl){
+    this.time = time;
+    this.url = imgUrl;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ui.windarrow.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ui.windarrow.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Martin on 2016-01-12.
+ */
+function Windarrow(arrowSize, angleRadianer, arrColor, cirColor){
+    // bla baserat på http://deepliquid.com/blog/archives/98
+
+    var size = arrowSize || 100;
+    var arrowSize = 0.8 * size; // för att få rotationsutrymme;
+    var angle = angleRadianer || 0.5*Math.PI;
+    // lägger på först ett kvart varv då 0/360 är norr/upp, medan algoritm nedan räknar 0 som öst (enhetscirklen)
+    angle = angle + 0.5*Math.PI;
+    // sedan ett halft varv då grderna var vinden kommer IFRÅN, medan pilen ska peka i TILL-riktningen
+    angle = angle + Math.PI;
+    //var arrowColor = arrColor || "#fff";
+
+    var arrowColor = arrColor;
+    var circleColor = cirColor || arrColor;
+
+    this.canvas = document.createElement("canvas");
+    $(this.canvas).addClass("windarrow");
+    this.canvas.width = size;
+    this.canvas.height = size;
+
+    var ctx = this.canvas.getContext('2d');
+
+    var arrowPoints = [
+        [ 0.5 * arrowSize, 0 ],
+        [ -0.5 * arrowSize, -0.3 * arrowSize],
+        [ -0.5 * arrowSize, 0.3 * arrowSize]
+    ];
+
+    // roterar
+    for(var i = 0; i &lt; arrowPoints.length; i++) {
+        var pt = arrowPoints[i];
+        arrowPoints[i] = this._rotatePoint(-angle, pt[0], pt[1]); // - fix för rätt håll (moturs uppåt 0 till positivt)
+    }
+
+    // ritar
+    // cirkel
+    ctx.beginPath();
+    ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI, false);
+    ctx.strokeStyle = circleColor;
+    ctx.fillStyle = circleColor;
+    ctx.stroke();
+    //ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(arrowPoints[0][0] + size/2, arrowPoints[0][1] + size/2);
+
+    ctx.lineTo(arrowPoints[1][0] + size/2, arrowPoints[1][1] + size/2);
+    ctx.lineTo(arrowPoints[2][0] + size/2, arrowPoints[2][1] + size/2);
+    ctx.lineTo(arrowPoints[0][0] + size/2, arrowPoints[0][1] + size/2);
+    //console.log("ARRAOW COLOR "+arrowColor);
+    ctx.fillStyle = arrowColor;
+    ctx.fill();
+
+
+    return this.canvas;
+}
+
+Windarrow.prototype._rotatePoint = function(angle, x, y){
+    return [
+        (x * Math.cos(angle)) - (y * Math.sin(angle)),
+        (x * Math.sin(angle)) + (y * Math.cos(angle))
+    ];
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CanvasSprite.html">CanvasSprite</a></li><li><a href="DataObjectDay.html">DataObjectDay</a></li><li><a href="DataObjectWeather.html">DataObjectWeather</a></li><li><a href="ForecastDataItem.html">ForecastDataItem</a></li><li><a href="ForecastManager.html">ForecastManager</a></li><li><a href="GooglePlaceData.html">GooglePlaceData</a></li><li><a href="Handler.html">Handler</a></li><li><a href="HandlerStack.html">HandlerStack</a></li><li><a href="SMHIDataObject.html">SMHIDataObject</a></li><li><a href="SMHIForecastAPI.html">SMHIForecastAPI</a></li><li><a href="SMHIForecastAPIData.html">SMHIForecastAPIData</a></li><li><a href="SMHIForecastHerovalues.html">SMHIForecastHerovalues</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CONFIG">CONFIG</a></li><li><a href="global.html#EventHandler">EventHandler</a></li><li><a href="global.html#FooterUI">FooterUI</a></li><li><a href="global.html#GoogleMapAPI">GoogleMapAPI</a></li><li><a href="global.html#GoogleMapUI">GoogleMapUI</a></li><li><a href="global.html#GooglePlaceAPI">GooglePlaceAPI</a></li><li><a href="global.html#GooglePlaceManager">GooglePlaceManager</a></li><li><a href="global.html#HeaderUI">HeaderUI</a></li><li><a href="global.html#platsChanged">platsChanged</a></li><li><a href="global.html#SMHIForecastDay">SMHIForecastDay</a></li><li><a href="global.html#SMHIForecastDayUI">SMHIForecastDayUI</a></li><li><a href="global.html#SMHIForecastUI">SMHIForecastUI</a></li><li><a href="global.html#SMHIForecastUIDataItemBig">SMHIForecastUIDataItemBig</a></li><li><a href="global.html#SMHIForecastUIDataItemHero">SMHIForecastUIDataItemHero</a></li><li><a href="global.html#SMHIForecastUIDataItemList">SMHIForecastUIDataItemList</a></li><li><a href="global.html#SMHIForecastUIItemFactory">SMHIForecastUIItemFactory</a></li><li><a href="global.html#SMHIForecastUINederbordinfo">SMHIForecastUINederbordinfo</a></li><li><a href="global.html#SMHIRadarAPI">SMHIRadarAPI</a></li><li><a href="global.html#SMHIRadarUI">SMHIRadarUI</a></li><li><a href="global.html#UIDialogFactory">UIDialogFactory</a></li><li><a href="global.html#UIWeatherPanel">UIWeatherPanel</a></li><li><a href="global.html#WeatherIcon">WeatherIcon</a></li><li><a href="global.html#WeatherUI">WeatherUI</a></li><li><a href="global.html#Windarrow">Windarrow</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 19:19:41 GMT+0100 (Västeuropa, normaltid)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
