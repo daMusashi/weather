@@ -3,13 +3,13 @@
  */
 
 function WeatherUI(app){
-    this.App = app;
+    this._app = app;
 
     this.Dialogs = UIDialogFactory();
 }
 
 WeatherUI.prototype.init = function() {
-    var app = this.App;
+    var app = this._app;
 
     $("#footer nav a").on("click", function(){
 
@@ -130,13 +130,13 @@ WeatherUI.prototype.manageSizes = function(){
     console.log("Weather: UI manginging sizes");
 
     // radar - behöver beräknas och ändras i JS, då canvasen behöver skalas med JS, räcker inte med CSS
-    var radarDim = this.App.radar.calcDimension();
+    var radarDim = this._app.radar.calcDimension();
 
     //$("#panel-radar").width(radarDim.width + buttonWidth);
     //$("#panel-radar").css("right", radarDim.width);
     //$("#panel-radar").css("right", 0);
     $("#radar-wrapper").width(radarDim.width);
-    this.App.radar.setDimension(radarDim);
+    this._app.radar.setDimension(radarDim);
 
     // sidepanels
     var sidepanelButtonWidth = $("#map-button").width(); // wrappern har ingen width, består bara av borders

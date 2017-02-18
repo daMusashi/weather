@@ -3,9 +3,9 @@
  */
 function SMHIForecastUIDataItemHero(dataItem){
 
-    this.data = dataItem;
+    this._data = dataItem;
 
-    var base = new SMHIForecastUIItemFactory(this.data);
+    var base = new SMHIForecastUIItemFactory(this._data);
 
     //console.log("Skapar HERO item-UI för "+this.data.date + "|"+this.data.time);
 

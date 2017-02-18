@@ -1,14 +1,28 @@
 /**
  * Created by Martin on 2015-12-14.
  */
-function GooglePlaceData(lat, long, googleResult, callback, callbackSource){
-    this.callback = callback || null;
-    this.source = callbackSource || null;
 
-    this.data = googleResult;
+/**
+ * Behandlar och håller geodata för en plats från Google
+ * @param {string} lat - Latitud för platsen
+ * @param {string} long - Longtide för platsen
+ * @param {objekt} googleResult - Returdatan (JSON) från Google Maps API
+ * @constructor
+ */
+function GooglePlaceData(lat, long, googleResult){
+
+    this._data = googleResult;
+    /**
+     * Latitude
+     */
     this.lat = lat;
+    /**
+     * Longitude
+     */
     this.long = long;
-
+    /**
+     * Land
+     */
     this.land = null; // country
     this.lan = null; // värmlnds län = administrative_area_level_1*/
     this.stad = null; // gullhomen/gullspång = postal_town
@@ -20,13 +34,17 @@ function GooglePlaceData(lat, long, googleResult, callback, callbackSource){
 
 }
 
+/**
+ *
+ * @private
+ */
 GooglePlaceData.prototype._process = function(){
     // adress_components[0].types[0]
     //console.log("PLATS DATA");
     //console.log(this.data);
 
     // tar bara första compoenten då den verkar innehålla allt jag behöver
-    var placeComponents = this.data[0].address_components;
+    var placeComponents = this._data[0].address_components;
     //console.log(placeComponents);
 
     this.vag = this._getAdressComponent(placeComponents, "route");

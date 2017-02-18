@@ -1,7 +1,14 @@
 /**
  * Created by Martin on 2015-12-11.
  */
-function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
+
+/**
+ * "Weahter item" huvudobjekt för datan - All väderdata för en viss tidpunkt, i regel ett heltimmesslag (t.ex 13.00)
+ * @param {string} datetimeUTC - Tidpunkten för vilken datan gäller
+ * @param {objekt} itemParameters - Ett objekt med all data från en datakälla (kust
+ * @constructor
+ */
+function ForecastDataItem(datetimeUTC, itemParameters){
     //console.log(itemParameters);
     this.datetimeRawUTC = datetimeUTC;
     this.dateobject = new Date(datetimeUTC);
@@ -26,7 +33,7 @@ function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
     this.askSannolikhet = null;
     this.vind = null;
 
-    this.data = [];
+    this._data = [];
 
     for(var i = 0; i < itemParameters.length; i++){
         var item = itemParameters[i];
@@ -34,11 +41,11 @@ function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
         switch(item.name){
             case "t": // Lufttemperatur på 2 meters höjd över marken
                 this.temp = new SMHIForecastAPIDataParameter("Temperatur", Math.round(item.values[0]), item.unit);
-                this.data.push(this.temp);
+                this._data.push(this.temp);
                 break;
             case "vis": // Horisontell sikt på 10 meters höjd över havet, max 50?
                 this.sikt = new SMHIForecastAPIDataParameter("Sikt", item.values[0], item.unit);
-                this.data.push(this.sikt);
+                this._data.push(this.sikt);
                 break;
             case "wd": // wind direction grader
                 var windDircetionDegrees = item.values[0];
@@ -61,27 +68,27 @@ function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
                     }
                 }
                 this.vindRiktning = new SMHIForecastAPIDataParameter("Vindriktning", windDircetionDegrees, item.unit, this.vindriktningToString(windDircetionDegrees));
-                this.data.push(this.vindRiktning);
+                this._data.push(this.vindRiktning);
                 break;
             case "ws": // wind speed
                 this.vindHastighet = new SMHIForecastAPIDataParameter("Vindhastighet", item.values[0], item.unit, this.vindHastighetToString(item.values[0]));
-                this.data.push(this.vindHastighet);
+                this._data.push(this.vindHastighet);
                 break;
             case "gust": // Byvindhastighet på 10 meters höjd över marken
                 this.vindByarHastighet = new SMHIForecastAPIDataParameter("Byvindhastighet", item.values[0], item.unit, this.vindHastighetToString(item.values[0]));
-                this.data.push(this.vindByarHastighet);
+                this._data.push(this.vindByarHastighet);
                 break;
             case "hmsl": // Mean sea level pressure. Lufttryck omräknat till havsytans nivå
                 this.lufttryck = new SMHIForecastAPIDataParameter("Lufttryck", item.values[0], item.unit);
-                this.data.push(this.lufttryck);
+                this._data.push(this.lufttryck);
                 break;
             case "r": // Relativ luftfuktighet på 2 meters höjd över marken
                 this.luftfuktighet = new SMHIForecastAPIDataParameter("Luftfuktighet", item.values[0], item.unit);
-                this.data.push(this.luftfuktighet);
+                this._data.push(this.luftfuktighet);
                 break;
             case "tstm": // Sannolikhet för åska [%]
                 this.askSannolikhet = new SMHIForecastAPIDataParameter("Sannolikhet för åska", item.values[0], item.unit);
-                this.data.push(this.askSannolikhet);
+                this._data.push(this.askSannolikhet);
                 break;
             case "tcc_mean": // total molnighet octas (finns också uppdelad low, med, high)
                 var cover = item.values[0];
@@ -108,7 +115,7 @@ function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
                         tolkning = "Klart";
                 }
                 this.molnighet = new SMHIForecastAPIDataParameter("Molnighet", cover, item.unit, tolkning);
-                this.data.push(this.molnighet);
+                this._data.push(this.molnighet);
                 break;
             case "pcat": // nederbördstyp
                 var cat = item.values[0];
@@ -137,22 +144,22 @@ function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
                         cat = 0;
                 }
                 this.nederbord = new SMHIForecastAPIDataParameter("Nederbörd", cat, item.unit, tolkning);
-                this.data.push(this.nederbord);
+                this._data.push(this.nederbord);
                 break;
             case "pmean": // medel av nederbördsintensitet i kg/m2/h, kan användas som mm/h, se http://www.smhi.se/kunskapsbanken/meteorologi/hur-mats-nederbord-1.637
                 //this.nederbordMangd = new SMHIForecastAPIDataParameter("Nederbördsintensitet (medel)", item.values[0], item.unit);
                 this.nederbordMangd = new SMHIForecastAPIDataParameter("Nederbördsintensitet (medel)", item.values[0], "mm");
-                this.data.push(this.nederbordMangd);
+                this._data.push(this.nederbordMangd);
                 //console.log("nedmängd (medel): "+this.nederbordMangd);
                 break;
             case "pmax": // medel av nederbördsintensitet
                 this.nederbordMangdMax = new SMHIForecastAPIDataParameter("Nederbördsintensitet (max)", item.values[0], item.unit);
-                this.data.push(this.nederbordMangdMax);
+                this._data.push(this.nederbordMangdMax);
                 //console.log("nedmängd (max): "+this.nederbordMangdMax);
                 break;
             case "pmin": // medel av nederbördsintensitet
                 this.nederbordMangdMin = new SMHIForecastAPIDataParameter("Nederbördsintensitet (min)", item.values[0], item.unit);
-                this.data.push(this.nederbordMangdMin);
+                this._data.push(this.nederbordMangdMin);
                 break;
         }
 
@@ -161,7 +168,7 @@ function SMHIForecastAPIDataItem(datetimeUTC, itemParameters){
     this.vind = this.vindHastighet.value + " " + this.vindHastighet.unit + " " + this.vindriktningToString(this.vindRiktning.value) + "("+this.vindRiktning.value+")";
 }
 
-SMHIForecastAPIDataItem.prototype.vindriktningToString = function(degree){
+ForecastDataItem.prototype.vindriktningToString = function(degree){
     //var val = Math.round((degree/45)+.5);
     var val = Math.round((degree/45));
     //console.log(val);
@@ -169,7 +176,7 @@ SMHIForecastAPIDataItem.prototype.vindriktningToString = function(degree){
     return arr[(val % 8)] + "("+degree+")";
 };
 
-SMHIForecastAPIDataItem.prototype.vindHastighetToString = function(hastighet){
+ForecastDataItem.prototype.vindHastighetToString = function(hastighet){
     // tolkningar från http://www.smhi.se/kunskapsbanken/meteorologi/skalor-for-vindhastighet-1.252
     var tolkning = "Vindstilla";
     if(hastighet >= 0.3){
@@ -194,10 +201,10 @@ SMHIForecastAPIDataItem.prototype.vindHastighetToString = function(hastighet){
     return tolkning;
 };
 
-SMHIForecastAPIDataItem.prototype.toString = function(){
+ForecastDataItem.prototype.toString = function(){
     var out = "<DATA ["+this.date+"|"+this.time+"] ";
-    for(var i = 0; i < this.data.length; i++){
-        var param = this.data[i];
+    for(var i = 0; i < this._data.length; i++){
+        var param = this._data[i];
         out += param.toString() + " ";
     }
     out += ">";

@@ -2,7 +2,7 @@
  * Created by Martin on 2015-12-12.
  */
 function SMHIForecastUIItemFactory(dataItem){
-    this.data = dataItem;
+    this._data = dataItem;
 
     this.dayDOM;
     this.dateDOM; // datum
@@ -29,11 +29,11 @@ SMHIForecastUIItemFactory.prototype.getTdDOM = function(customClass){
 
     //var icon = new WeatherIcon(100, this.data);
 
-    var time = this.createCommonValueDOM("td", this.data.time, "wr-time");
-    var temp = this.createCommonValueDOM("td", this.data.temp.value + "°", "wr-temp");
-    var vader = this.createCommonValueDOM("td", this.data.molnighet.tolkning, "wr-vader-desc");
-    if(this.data.nederbord.value > 0){
-        vader.innerHTML += " - " +this.data.nederbord.tolkning;
+    var time = this.createCommonValueDOM("td", this._data.time, "wr-time");
+    var temp = this.createCommonValueDOM("td", this._data.temp.value + "°", "wr-temp");
+    var vader = this.createCommonValueDOM("td", this._data.molnighet.tolkning, "wr-vader-desc");
+    if(this._data.nederbord.value > 0){
+        vader.innerHTML += " - " +this._data.nederbord.tolkning;
     }
 
     //icon.append(wrapper);
@@ -47,40 +47,40 @@ SMHIForecastUIItemFactory.prototype.getTdDOM = function(customClass){
 
 SMHIForecastUIItemFactory.prototype.createTempValueDOM = function(tag){
     var classes = ["temperature", "weather-data"];
-    if(this.data.temp.value < CONFIG.coldLimit){
+    if(this._data.temp.value < CONFIG.coldLimit){
         classes.push("cold");
     }
-    if(this.data.temp.value > CONFIG.warmLimit){
+    if(this._data.temp.value > CONFIG.warmLimit){
         classes.push("hot");
     }
-    return this.createCommonValueDOM(tag, this.data.temp.value + "°", classes);
+    return this.createCommonValueDOM(tag, this._data.temp.value + "°", classes);
 };
 SMHIForecastUIItemFactory.prototype.createCloudcoverValueDOM = function(tag){
-    return this.createCommonValueDOM(tag, this.data.molnighet.tolkning, ["cloudcover", "weather-data"]);
+    return this.createCommonValueDOM(tag, this._data.molnighet.tolkning, ["cloudcover", "weather-data"]);
 };
 SMHIForecastUIItemFactory.prototype.createTimeValueDOM = function(tag){
-    return this.createCommonValueDOM(tag, this.data.time, ["time", "weather-data"]);
+    return this.createCommonValueDOM(tag, this._data.time, ["time", "weather-data"]);
 };
 
 SMHIForecastUIItemFactory.prototype.createPrecipitationValueDOM = function(tag){
     var desc = "";
     var classes = ["precipitation", "weather-data"];
-    if(this.data.nederbord.value > 0){
-        desc = this._getNederbordMangdDesc(this.data.nederbordMangdMax.value, this.data.nederbord.tolkning);
+    if(this._data.nederbord.value > 0){
+        desc = this._getNederbordMangdDesc(this._data.nederbordMangdMax.value, this._data.nederbord.tolkning);
         //desc = desc + " ("+this.data.nederbordMangdMax.value+" "+this.data.nederbordMangdMax.unit+")";
     } else {
         classes.push("suppress");
         desc = "Uppehåll";
     }
-    var dom = this.createCommonValueDOM(tag, desc, classes);
-    return dom;
+
+    return this.createCommonValueDOM(tag, desc, classes);
 };
 SMHIForecastUIItemFactory.prototype.createWindValueDOM = function(tag){
     var mainDOM = document.createElement(tag);
     $(mainDOM).addClass("weather-data");
     $(mainDOM).addClass("wind");
 
-    var opacity = this.data.vindHastighet.value/14;
+    var opacity = this._data.vindHastighet.value/14;
     if(opacity < 0.05){
         opacity = 0.05;
     }
@@ -90,26 +90,26 @@ SMHIForecastUIItemFactory.prototype.createWindValueDOM = function(tag){
     var arrowDOM = document.createElement("span");
     $(arrowDOM).addClass("wind-direction");
     var arrowColor = "rgba("+CONFIG.colorWindArrow[0]+", "+CONFIG.colorWindArrow[1]+", "+CONFIG.colorWindArrow[2]+", "+opacity.toFixed(2)+")";
-    arrowDOM.appendChild(new Windarrow(15, this.data.vindRiktning.value*(Math.PI/180), arrowColor));
+    arrowDOM.appendChild(new Windarrow(15, this._data.vindRiktning.value*(Math.PI/180), arrowColor));
     // skapar opactitet efter styrka, 14 m/s max (1) - börjar "hård vind", sedan varningfärger istället, 0.05 lägsta opacity
 
     //$(arrowDOM).css("opacity", opacity);
 
     //var riktningDOM = this.createCommonValueDOM("span", this.data.vindRiktning.tolkning, ["winddirection-cardinal"]);
-    var hastighetDOM = this.createCommonValueDOM("span", this.data.vindHastighet.tolkning, ["wind-speed"]);
-    if(this.data.vindHastighet.value < CONFIG.supressWindUnder){
+    var hastighetDOM = this.createCommonValueDOM("span", this._data.vindHastighet.tolkning, ["wind-speed"]);
+    if(this._data.vindHastighet.value < CONFIG.supressWindUnder){
         $(hastighetDOM).addClass("suppress");
     }
 
-    var byhastighetDOM = this.createCommonValueDOM("span", this.data.vindByarHastighet.tolkning + " i byar!", ["wind-gustspeed"]);
+    var byhastighetDOM = this.createCommonValueDOM("span", this._data.vindByarHastighet.tolkning + " i byar!", ["wind-gustspeed"]);
     $(byhastighetDOM).addClass("warning");
     byhastighetDOM.innerHTML = "<br>" + byhastighetDOM.innerHTML;
 
     mainDOM.appendChild(arrowDOM);
     //mainDOM.appendChild(riktningDOM);
     mainDOM.appendChild(hastighetDOM);
-    if(this.data.vindHastighet.tolkning != this.data.vindByarHastighet.tolkning) {
-        if(this.data.vindByarHastighet.value > CONFIG.warnForByarAt) { // 14 stark vind
+    if(this._data.vindHastighet.tolkning != this._data.vindByarHastighet.tolkning) {
+        if(this._data.vindByarHastighet.value > CONFIG.warnForByarAt) { // 14 stark vind
             mainDOM.appendChild(byhastighetDOM);
         }
     }
@@ -118,7 +118,7 @@ SMHIForecastUIItemFactory.prototype.createWindValueDOM = function(tag){
 };
 
 SMHIForecastUIItemFactory.prototype.createIconDOM = function(big, simple){
-    var icon = new WeatherIcon(this.data, big, simple);
+    var icon = new WeatherIcon(this._data, big, simple);
     var iconWrapper = document.createElement("div");
     $(iconWrapper).addClass("icon");
     $(iconWrapper).addClass("weather-data");

@@ -26,28 +26,54 @@ function apiloaded(){
 
 }
 
+/**
+ * Appens main objekt. Statiskt objekt.
+ * @constructor
+ */
 function Weather(){}
 
 Weather.libsToLoad = 2;
 Weather.libsLoaded = 0;
 
+/**
+ * Initierar appen
+ */
 Weather.init = function(){
-    console.log("Weather: App Init");
+    console.log("Weather: _app Init");
 
+    /**
+     * Håller UI
+     * @type {WeatherUI}
+     */
     this.ui = new WeatherUI(this);
-
+    /**
+     * Håller aktuell plats
+     * @type {GooglePlaceManager}
+     */
     this.plats = new GooglePlaceManager(this);
     this.plats.setOnChangeListener(platsChanged);
-
+    /**
+     * Håller radarbild
+     * @type {SMHIRadarUI}
+     */
     this.radar = new SMHIRadarUI(document.getElementById("panel-radar"));
     //radar.start();
-
+    /**
+     * Håller UI Header
+     * @type {HeaderUI}
+     */
     this.header = new HeaderUI(document.getElementById("panel-header"));
-
+    /**
+     * Håller UI Foter
+     * @type {FooterUI}
+     */
     this.footer = new FooterUI(document.getElementById("panel-footer"));
-
-    this.forecast = new SMHIForecastManager(this); // inner för scrollning
-    this.forecast.setOnChangeListener(forecastChanged);
+    /**
+     * Håller aktuellt dataset
+     * @type {ForecastManager}
+     */
+    this.forecast = new ForecastManager(this); // inner för scrollning
+    this.forecast.addOnChangeListener(new Handler(forecastChanged, this));
 
     /*radarUI = new SMHIRadarUI(document.getElementById("weather-heroes"), 300);
      radarAPI = new SMHIRadarAPI(24, "start", radarUI);
@@ -62,8 +88,12 @@ Weather.init = function(){
 
     this.ui.init();
     this.ui.manageSizes();
-}
+};
 
+/**
+ * Handler för när plats ändras
+ * @param {GooglePlaceData} placeData
+ */
 // När plats-data hämtats/ändrats
 function platsChanged(placeData){
     console.log("Weather: Plats ändrad");

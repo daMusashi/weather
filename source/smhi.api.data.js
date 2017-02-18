@@ -1,5 +1,18 @@
-function DataObject(reponseObject){
+/**
+ * Behandling av SMHI returdata - Behandlar och håller dataset från SMHI's API
+ * @param reponseObject - Dataretur (JSON) från SMHI-API
+ * @constructor
+ */
+function SMHIDataObject(reponseObject){
+    /**
+	 * Stad
+	 * @type {string}
+     */
 	this.city = reponseObject.city.name;
+    /**
+     * En array med dataset för dagar
+     * @type {DataObjectDay[]}
+     */
 	this.days = [];
 
 	// Fyller days med tomma dagar
@@ -29,12 +42,21 @@ function DataObject(reponseObject){
 
 }
 
+/**
+ * Behandling av SMHI returdata - Samlar ihop DataObjectWeather (weather items) som hör till samma dag
+ * @constructor
+ */
+
 function DataObjectDay(){
 	this.dayWeekNum = -1;
 	this.day = "okänt";
 	this.date = "0000-00-00";
 	this.list = [];
 
+    /**
+	 * Lägger till en DataObjectWeather (weather item) till dagen
+     * @param {DataObjectWeather} weatherDataobject
+     */
 	this.addWeather = function(weatherDataobject){
 		this.list.push(weatherDataobject);
 		this.day = weatherDataobject.day;
@@ -43,6 +65,11 @@ function DataObjectDay(){
 
 }
 
+/**
+ * Behandling av SMHI returdata - Håller ett "weather item", väderdata knuten till en tidpunk
+ * @param responseWeatherData
+ * @constructor
+ */
 function DataObjectWeather(responseWeatherData){
 	// lägger till 0 i början på intalstimmar
 	this.addZero = function(i) {

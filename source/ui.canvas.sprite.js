@@ -1,8 +1,20 @@
 /**
  * Created by Martin on 2015-12-13.
  */
+
+/**
+ * In bild som visas på canvas
+ * @param context - En referens till ett Canvas kontext
+ * @param {string} imgUrl - URL till bilden
+ * @param {int} width - bredden bilden ska visas med
+ * @param {int} height - höjden bilden ska visas med
+ * @constructor
+ */
 function CanvasSprite(context, imgUrl, width, height){
     this.context = context;
+    /**
+     * Bildens URL
+     */
     this.url = imgUrl;
     this.width = width;
     this.height = height;
@@ -10,6 +22,11 @@ function CanvasSprite(context, imgUrl, width, height){
     this.loaded = false;
 }
 
+/**
+ *
+ * @param {function} callback - Metod att köra när bilden laddats från url
+ * @param {object} callbackSource - Objektet som callback tillhör (ska köras på)
+ */
 CanvasSprite.prototype.load = function(callback, callbackSource){
     this.img = new Image();
     this.img.src = this.url;
@@ -29,6 +46,11 @@ CanvasSprite.prototype.load = function(callback, callbackSource){
     }
 };
 
+/**
+ * Renderar bilden på canvas
+ * @param {int} startX - X för bildens TopLeft
+ * @param {num} startY - Y för bildens TopLeft
+ */
 CanvasSprite.prototype.render = function(startX, startY){
     var sX = startX || 0;
     var sY = startY || 0;

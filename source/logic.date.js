@@ -1,6 +1,11 @@
 /**
  * Created by Martin on 2015-12-14.
  */
+
+/**
+ * Ger dagens dag som namn
+ * @returns {string}
+ */
 Date.prototype.getDayName = function(){
     switch(this.getDay()){
         case 1:
@@ -30,6 +35,10 @@ Date.prototype.getDayName = function(){
 
 };
 
+/**
+ * Returnerar true/false om idag är en lördag eller söndag
+ * @returns {boolean}
+ */
 Date.prototype.isWeekend = function(){
     if(this.getDay() == 6 || this.getDay() == 0){
         return true;

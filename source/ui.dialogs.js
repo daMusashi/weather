@@ -1,21 +1,36 @@
 /**
  * Created by Martin on 2016-01-09.
  */
+
+/**
+ * Factory för dialoger. Statiskt objekt. Skapar DOM-element för diverse dialogboxar.
+ * @constructor
+ */
 function UIDialogFactory() {
 
 }
 
+/**
+ * Ger DOM för fel-dialog
+ * @param {string} message - felmeddelande
+ */
 UIDialogFactory.getErrorModalDOM = function(message){
     var buttons = [this._getCloseButton()];
-    var dom = UIDialogFactory._getDialogBaseDOM("error-modal", "error", "Ett fel har uppstått", message, buttons);
-    return dom;
+    return UIDialogFactory._getDialogBaseDOM("error-modal", "error", "Ett fel har uppstått", message, buttons);
 };
-
+/**
+ * Ger DOm för info-dialog
+ * @param {string} title - Title på dialog
+ * @param {string} message - Beskrivning
+ */
 UIDialogFactory.getMessageModalDOM = function(title, message){
-    var dom = UIDialogFactory._getMessageBase("message-modal-place-notfound", title, message);
-    return dom;
+    return UIDialogFactory._getMessageBase("message-modal-place-notfound", title, message);
 };
 
+/**
+ * Ger DOM för vänta-dailog
+ * @param {string} message - Beskrivning
+ */
 UIDialogFactory.getWaitModalDOM = function(message){
     var dom = UIDialogFactory._getDialogBaseDOM("wait-modal", "wait", message);
     $(dom).attr("data-backdrop", "false");
@@ -28,16 +43,22 @@ UIDialogFactory._getDialogBaseDOM = function(id, type, dia_html, dia_title, butt
     id = id + "-" + type;
     var dom;
 
+    // om modalen redan lagts till sidan
     if(dom = document.getElementById(id)) {
 
-        if (titleText) {
-            $(title).text(titleText);
-            $(header).css("display", "block");
-        } else {
-            $(header).css("display", "none");
-        }
-        $("#" + id + " .modal-body").html(dia_html);
+        var titleId = "#"+id+" .modal-title";
+        var headerId = "#"+id+" .modal-header";
+        var bodyId = "#"+id+" .modal-body";
 
+        if (titleText) {
+            $(titleId).text(titleText);
+            $(headerId).css("display", "block");
+        } else {
+            $(headerId).css("display", "none");
+        }
+        $(bodyId).html(dia_html);
+
+    // annars skapa
     } else {
 
         dom = document.createElement('div');

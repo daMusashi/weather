@@ -3,7 +3,7 @@
  */
 function GooglePlaceManager(app){
 
-    this.App = app;
+    this._app = app;
 
     this.mapContainerId = "panel-map";
 
@@ -30,7 +30,7 @@ GooglePlaceManager.prototype.setOnChangeListener = function(listener, listenerSo
 // när kartplats ändrats av user
 GooglePlaceManager.prototype._onMapChange = function(latLong){
     console.log("Weather: Kartplats ändrad");
-    this.App.ui.closeMap();
+    this._app.ui.closeMap();
     this.setCoord(latLong.lat, latLong.long);
 }
 
@@ -78,12 +78,12 @@ GooglePlaceManager.prototype.findPlace = function(){
         $(me.gettingModalDOM).modal("hide");
         console.log("Weather: PLATS KUNDE INTE HITTAS (eller användaren blockar). Visar karta.");
         $(me.notFoundModalDOM).modal();
-        me.App.ui.openMap();
+        me._app.ui.openMap();
 
     }
 
     navigator.geolocation.getCurrentPosition(placeSuccess, placeFail, options);
-}
+};
 
 // extern ändring - findPlace hamnar här
 GooglePlaceManager.prototype.setCoord = function(lat, long){

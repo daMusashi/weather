@@ -5,7 +5,7 @@ function WeatherIcon(dataItem, big, simple){
     this.storSize = 80;
     this.litenSize = 40;
 
-    this.data = dataItem;
+    this._data = dataItem;
     this.isSimple = simple || false; // simple = bara en ikon: sol, moln, regn eller snö
     this.isBig = big || true;
 
@@ -20,7 +20,7 @@ function WeatherIcon(dataItem, big, simple){
     //this.width = this.height * this.scale;
 
     this.canvas = document.createElement("canvas");
-    this.canvas.id = "weaher-icon-"+this.height+"-"+this.data.id;
+    this.canvas.id = "weaher-icon-"+this.height+"-"+this._data.id;
     this.canvas.width = this.size;
     this.canvas.height = this.size;
 
@@ -62,7 +62,7 @@ WeatherIcon.prototype._addSky = function(isStor){
     if(!isDag){
         var dageEllerNatt = "_natt";
     }
-    switch(this.data.molnighet.value) {
+    switch(this._data.molnighet.value) {
         case 1:
         case 2:
             //"Mestadels klart";
@@ -87,7 +87,7 @@ WeatherIcon.prototype._addSky = function(isStor){
             // klart
             file += "klart";
     }
-    if(this.data.molnighet != 8){
+    if(this._data.molnighet != 8){
         file += dageEllerNatt;
     }
     file += ".png";
@@ -106,14 +106,14 @@ WeatherIcon.prototype._addNederbord = function(isStor){
         }
     }
 
-    if(this.data.nederbord.value > 0) {
+    if(this._data.nederbord.value > 0) {
         var file = "gfx/";
         if (isStor) {
             file += "stor_inkludera_";
         } else {
             file += "liten_inkludera_";
         }
-        switch (this.data.nederbord.value) {
+        switch (this._data.nederbord.value) {
             case 1:
                 // "Snö";
                 file += "sno";
@@ -163,7 +163,7 @@ WeatherIcon.prototype._addSimple = function(isStor){
 
     var type = "klart_dag";
 
-    switch(this.data.molnighet.value) {
+    switch(this._data.molnighet.value) {
         case 2:
         case 3:
         case 4:
@@ -180,9 +180,9 @@ WeatherIcon.prototype._addSimple = function(isStor){
     }
 
     // om nederbörd, ersätter sol/moln
-    if(this.data.nederbord.value > 0) {
+    if(this._data.nederbord.value > 0) {
 
-        switch (this.data.nederbord.value) {
+        switch (this._data.nederbord.value) {
             case 1:
             case 2:
                 // "Snö";

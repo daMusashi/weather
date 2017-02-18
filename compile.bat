@@ -20,10 +20,10 @@ node C:\Users\Martin\AppData\Roaming\npm\node_modules\uglify-js\bin\uglifyjs^
  	%source%ui.header.js^
  	%source%ui.footer.js^
  	%source%ui.weather.icon.js^
- 	%source%smhi.forecast.manager.js^
- 	%source%smhi.forecast.api.js^
+ 	%source%forecast.manager.js^
+ 	%source%smhi.api.js^
  	%source%smhi.forecast.data.js^
- 	%source%smhi.forecast.data.item.js^
+ 	%source%forecast.data.item.js^
  	%source%smhi.forecast.data.day.js^
  	%source%smhi.forecast.ui.js^
  	%source%smhi.forecast.ui.weahterpanel.js^

@@ -1,30 +1,49 @@
 /**
  * Created by Martin on 2015-12-12.
  */
-function SMHIForecastManager(app, heroContainerId, daysContainerId){
-    this.App = app;
 
-    this.heroesContainerId = "panel-heroes";
-    this.daysContainerId = "days-container";
+/**
+ * Manager för all väder-data
+ * @param {Weather} app - Appen
+ * @constructor
+ */
+function ForecastManager(app){
+    this._app = app;
 
+    var heroesContainerId = "panel-heroes";
+    var daysContainerId = "days-container";
+
+    /**
+     * Håller API för väderdatan (förvalt SMHI)
+     * @type {SMHIForecastAPI}
+     */
     this.api = new SMHIForecastAPI();
-    this.api.setOnChangeListener(this.onDataChanged, this);
+    this.api.addOnChangeListener(new Handler(this.onDataChanged, this));
 
-    this.ui = new SMHIForecastUI(this.heroesContainerId, this.daysContainerId);
+    /**
+     * Håller UI för väderdatan
+     * @type {SMHIForecastUI}
+     */
+    this.ui = new SMHIForecastUI(heroesContainerId, daysContainerId);
 
     this.days = [];
 
     this.loadingModalDOM = new UIDialogFactory.getWaitModalDOM("Laddar data från SMHI...");
 
     this.googlePlatsData = null; // sparar senaste platsdata för att kunna uppdatera utan ny platsdata
+
+    this._onChangeListeners = new HandlerStack();
 }
 
-SMHIForecastManager.prototype.setOnChangeListener = function(listener, listenerSource){
-    this.listener = listener;
-    this.listenerSource = listenerSource;
+/**
+ * Lägger till lyssnare för onChange (nytt dataset)
+ * @param {Handler} listener
+ */
+ForecastManager.prototype.addOnChangeListener = function(listener){
+    this._onChangeListeners.add(listener);
 };
 
-SMHIForecastManager.prototype.update = function(googlePlaceData, me){
+ForecastManager.prototype.update = function(googlePlaceData, me){
     var me = me || this;
     var plats = googlePlaceData || this.googlePlatsData;
 
@@ -35,20 +54,14 @@ SMHIForecastManager.prototype.update = function(googlePlaceData, me){
     }
 };
 
-SMHIForecastManager.prototype.onDataChanged = function(data, me){
+ForecastManager.prototype.onDataChanged = function(data, me){
     console.log("Forecast Manager: data changed...");
     //console.log(data);
     if(this.loadingModalDOM) {
         $(this.loadingModalDOM).modal("hide");
     }
 
-    if(me.listener) {
-        if (me.listenerSource) {
-            me.listener.call(me.listenerSource, data, me.listenerSource);
-        } else {
-            me.listener(data);
-        }
-    }
+    this._onChangeListeners.handlerCall(data);
 
     this.ui.update(data);
 

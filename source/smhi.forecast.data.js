@@ -1,11 +1,17 @@
 /**
  * Created by Martin on 2015-12-11.
  */
+
+/**
+ * Hållare av aktuell väder-dataset
+ * @param {string} approvedTime - Tiden när datasetet (tas från returdatan)
+ * @param place
+ * @constructor
+ */
 function SMHIForecastAPIData(approvedTime, place){
 
     this.approvedTime = new Date(approvedTime);
     this.place = place || null;
-    //console.log("data för plats: "+place);
 
     this.weatherItems = []; // alla weather-items (bara forecast, innan aktuell tid borttagna)
     this.weatherDays = []; // arrays dayItems
@@ -14,7 +20,7 @@ function SMHIForecastAPIData(approvedTime, place){
 SMHIForecastAPIData.prototype.addDataItem = function(datetimeUTC, itemParameters){
     //console.log("Lägger till data-item");
     //console.log(itemParameters);
-    this.weatherItems.push(new SMHIForecastAPIDataItem(datetimeUTC, itemParameters));
+    this.weatherItems.push(new ForecastDataItem(datetimeUTC, itemParameters));
     //console.log(this.weatherItems.length);
 };
 

@@ -12,13 +12,17 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/Doc" />
+      <excludeFolder url="file://$MODULE_DIR$/_compile" />
       <excludeFolder url="file://$MODULE_DIR$/_work" />
       <excludeFolder url="file://$MODULE_DIR$/css" />
+      <excludeFolder url="file://$MODULE_DIR$/libs" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/sass/.sass-cache" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="compass-library" level="project" />
+    <orderEntry type="library" name="jQuery" level="project" />
   </component>
 </module>
