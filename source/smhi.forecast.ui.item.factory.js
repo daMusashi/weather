@@ -32,8 +32,8 @@ SMHIForecastUIItemFactory.prototype.getTdDOM = function(customClass){
     var time = this.createCommonValueDOM("td", this._data.time, "wr-time");
     var temp = this.createCommonValueDOM("td", this._data.temp.value + "°", "wr-temp");
     var vader = this.createCommonValueDOM("td", this._data.molnighet.tolkning, "wr-vader-desc");
-    if(this._data.nederbord.value > 0){
-        vader.innerHTML += " - " +this._data.nederbord.tolkning;
+    if(this._data.nederbordTyp.value > 0){
+        vader.innerHTML += " - " +this._data.nederbordTyp.tolkning;
     }
 
     //icon.append(wrapper);
@@ -65,8 +65,8 @@ SMHIForecastUIItemFactory.prototype.createTimeValueDOM = function(tag){
 SMHIForecastUIItemFactory.prototype.createPrecipitationValueDOM = function(tag){
     var desc = "";
     var classes = ["precipitation", "weather-data"];
-    if(this._data.nederbord.value > 0){
-        desc = this._getNederbordMangdDesc(this._data.nederbordMangdMax.value, this._data.nederbord.tolkning);
+    if(this._data.nederbordTyp.value > 0){
+        desc = this._getNederbordMangdDesc(this._data.nederbordMangdMax.value, this._data.nederbordTyp.tolkning);
         //desc = desc + " ("+this.data.nederbordMangdMax.value+" "+this.data.nederbordMangdMax.unit+")";
     } else {
         classes.push("suppress");

@@ -32,7 +32,7 @@ node C:\Users\Martin\AppData\Roaming\npm\node_modules\uglify-js\bin\uglifyjs^
  	%source%smhi.forecast.ui.item.list.js^
  	%source%smhi.forecast.ui.item.big.js^
  	%source%smhi.forecast.ui.item.hero.js^
- 	%source%smhi.forecast.ui.nederbordinfo.js^
+ 	%source%ui.forecast.rightnow.js^
  	%source%ui.dialogs.js^
  	%source%ui.js^
  	%source%ui.windarrow.js^

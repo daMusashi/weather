@@ -7,12 +7,14 @@ function GooglePlaceManager(app){
 
     this.mapContainerId = "panel-map";
 
+    this.onChangeListers = new HandlerStack();
+
     this.map = new GoogleMapUI(this.mapContainerId);
-    this.map.setOnChangeListener(this._onMapChange, this);
+    this.map.addOnChangeListener(new Handler(this._onMapChange, this));
     this.map.init();
 
     this.place = new GooglePlaceAPI();
-    this.place.setOnChangeListener(this._onPlaceChange, this);
+    this.place.addOnChangeListener(new Handler(this._onPlaceChange, this));
 
     this.platsTitle  = document.createElement("h2");
     $(this.platsTitle).attr("id", "plats-title");
@@ -22,9 +24,14 @@ function GooglePlaceManager(app){
 
 }
 
-GooglePlaceManager.prototype.setOnChangeListener = function(listener, listenerSource){
-    this.listener = listener;
-    this.listenerSource = listenerSource;
+
+/**
+ * Lägger till onChange lyssnare
+ * @param {Handler} listener
+ */
+GooglePlaceManager.prototype.addOnChangeListener = function(listener){
+    console.log(listener);
+    this.onChangeListers.add(listener);
 };
 
 // när kartplats ändrats av user
@@ -43,13 +50,7 @@ GooglePlaceManager.prototype._onPlaceChange = function(googlePlaceData){
 
     $(this.platsTitle).text(googlePlaceData.getString());
 
-    if(this.listener) {
-        if (this.listenerSource) {
-            this.listener.call(this.listenerSource, googlePlaceData, this.listenerSource);
-        } else {
-            this.listener(googlePlaceData);
-        }
-    }
+    this.onChangeListers.handlerCall(googlePlaceData);
 };
 
 // frågar enhet om geo-coordinater

@@ -20,6 +20,14 @@
 * long_mousedown
 
  */
+
+/**
+ * Hanterar logik för en Googles Maps
+ * @param {number} defaultLat - Förvald latitude
+ * @param {number} defaultLong - förvald longitude
+ * @param {number} defaultZoom - Förvald kartzoom
+ * @constructor
+ */
 function GoogleMapAPI(defaultLat, defaultLong, defaultZoom) {
 
     this.lat = defaultLat;
@@ -35,23 +43,24 @@ function GoogleMapAPI(defaultLat, defaultLong, defaultZoom) {
     this.marker = null;
 
     this.eventHandlers = [];
-};
+}
 
-GoogleMapAPI.prototype.addEventHandler = function(eventType, listener, source){
-    this.eventHandlers.push(new EventHandler(eventType, listener, source))
+/**
+ * LÄgger till lyssnare för DOM-händelser för kartan
+ * @param {string} eventType - Namn på DOM-händelse
+ * @param {Handler} listener - Lyssnare
+ */
+GoogleMapAPI.prototype.addEventHandler = function(eventType, listener){
+    this.eventHandlers.push(new EventHandler(eventType, listener))
 };
 
 GoogleMapAPI.prototype._execEventHandler = function(eventType, sendData){
     var data = sendData || null;
     for(var i = 0; i < this.eventHandlers.length; i++){
-        var handler = this.eventHandlers[i];
-        if(handler.type == eventType){
+        var eventHandler = this.eventHandlers[i];
+        if(eventHandler.type == eventType){
             console.log("found event "+eventType);
-            if(handler.listener) {
-                if (handler.listenerSource) {
-                    handler.listener.call(handler.listenerSource, data);
-                }
-            }
+            eventHandler.listener.handlerCall(data);
         }
     }
 }

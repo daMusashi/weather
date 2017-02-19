@@ -113,7 +113,7 @@ UIWeatherPanel.prototype.clear = function(dom){
 };
 
 UIWeatherPanel.prototype.append = function(dom){
-    this.content.appendChild(dom);
+    $(this.content).append(dom);
 };
 
 UIWeatherPanel.prototype.getDOM = function(){

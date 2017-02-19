@@ -6,7 +6,12 @@
  * Håller speciella värden från aktuellt dataset såsom max/min nedebörd, vind, temp samt när nederbörd startar/slutar
  * @constructor
  */
-function ForecastHerovalues(){
+function ForecastHeroItems(){
+    /**
+     * Item för nuvrande tid
+     * @type {ForecastDataItem}
+     */
+    this.nowItem = null;
     /**
      * Item för Max temp i dataset
      * @type {ForecastDataItem}
@@ -28,21 +33,31 @@ function ForecastHerovalues(){
      */
     this.minVindItem = null;
     /**
+     * Item för mest nederbörd - Null om ingen nederbörd
+     * @type {ForecastDataItem}
+     */
+    this.maxNederbordItem = null;
+    /**
+     * Item för mest nederbörd - Null om ingen nederbörd
+     * @type {ForecastDataItem}
+     */
+    this.minNederbordItem = null;
+    /**
      * Item för nästa nederbörd - Null om pågående nederbörd
      * @type {ForecastDataItem}
      */
-    this.nextNederbordItem = null;
+    this.startNederbordItem = null;
     /**
      * Item för när kommande eller pågående nederbörd slutar
      * @type {ForecastDataItem}
      */
-    this.nederbordEndsItem = null;
+    this.endNederbordItem = null;
 }
 
 /**
  *  Uppdatera objektet med ett nytt dataset
  * @param {DataAdapterSMHI} data
  */
-ForecastHerovalues.prototype.update = function(data){
+ForecastHeroItems.prototype.update = function(data){
 
 };

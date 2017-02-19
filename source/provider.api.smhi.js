@@ -51,6 +51,7 @@ ProviderAPISMHI.prototype.update = function(googlePlaceData){
 			}
 
 			var dataset = provider.getDataset();
+			dataset.process(); // beräkna/sortera/tolka etc.
 
             me._onChangeHandlers.handlerCall(dataset);
   		})

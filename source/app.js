@@ -51,7 +51,7 @@ Weather.init = function(){
      * @type {GooglePlaceManager}
      */
     this.plats = new GooglePlaceManager(this);
-    this.plats.setOnChangeListener(platsChanged);
+    this.plats.addOnChangeListener(new Handler(platsChanged));
     /**
      * Håller radarbild
      * @type {SMHIRadarUI}

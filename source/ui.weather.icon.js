@@ -106,14 +106,14 @@ WeatherIcon.prototype._addNederbord = function(isStor){
         }
     }
 
-    if(this._data.nederbord.value > 0) {
+    if(this._data.nederbordTyp.value > 0) {
         var file = "gfx/";
         if (isStor) {
             file += "stor_inkludera_";
         } else {
             file += "liten_inkludera_";
         }
-        switch (this._data.nederbord.value) {
+        switch (this._data.nederbordTyp.value) {
             case 1:
                 // "Snö";
                 file += "sno";
@@ -180,9 +180,9 @@ WeatherIcon.prototype._addSimple = function(isStor){
     }
 
     // om nederbörd, ersätter sol/moln
-    if(this._data.nederbord.value > 0) {
+    if(this._data.nederbordTyp.value > 0) {
 
-        switch (this._data.nederbord.value) {
+        switch (this._data.nederbordTyp.value) {
             case 1:
             case 2:
                 // "Snö";

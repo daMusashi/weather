@@ -9,7 +9,7 @@ function SMHIForecastUI(heroContainerId, daysContainerId){
 
     this.dayItems = [];
     this.dayBoxes = [];
-    this.nederbordBox = null;
+    this.rightnowBox = null;
     this.laterBoxes = [];
 
     this._buildUI();
@@ -24,8 +24,8 @@ SMHIForecastUI.prototype._buildUI = function(){
         this.dayItemsContainer.appendChild(this.dayBoxes[i].getDOM());
     }
 
-    this.nederbordBox = new SMHIForecastUINederbordinfo(["hero-box", "flex-1"]);
-    this.heroItemsContainer.appendChild(this.nederbordBox.getDOM());
+    this.rightnowBox = new UiForecastRightnowInfo(["hero-box", "flex-1"]);
+    this.heroItemsContainer.appendChild(this.rightnowBox.getDOM());
 
     //var div = document.createElement("div");
     //$(div).addClass("flex-5");
@@ -40,13 +40,13 @@ SMHIForecastUI.prototype._buildUI = function(){
 
 }
 
-SMHIForecastUI.prototype.update = function(data){
+SMHIForecastUI.prototype.update = function(dataset){
     //me = me || this;
 
     console.log("Forecast UI Manager: update...");
     //console.log(data);
 
-    this.nederbordBox.update(data);
+    this.rightnowBox.update(dataset.heroItems);
     //this.viz.vizTemp(data);
 
     /*if(me.listener) {
@@ -59,7 +59,7 @@ SMHIForecastUI.prototype.update = function(data){
 
     var laterBoxContent = [];
 
-    var nowItem = data.getClosestItem();
+    /*var nowItem = data.getClosestItem();
     var nowItemDOM = new SMHIForecastUIDataItemHero(nowItem);
 
     var time = new Date();
@@ -87,7 +87,7 @@ SMHIForecastUI.prototype.update = function(data){
     }
     var nextDiff = now.diff(nextItem.dateobject);
     var laterDiff = now.diff(laterItem.dateobject);
-    var forwardDiff = now.diff(forwardItem.dateobject);
+    var forwardDiff = now.diff(forwardItem.dateobject);*/
 
     /*
     this.laterBoxes[0].clear();
@@ -109,9 +109,9 @@ SMHIForecastUI.prototype.update = function(data){
     */
 
     // Uppdaterar dayBoxes med dayObjects
-    for(day in data.weatherDays){
+    for(day in dataset.dataDays){
         var dayBox = this.dayBoxes[day];
-        var dayData = data.weatherDays[day];
+        var dayData = dataset.dataDays[day];
         dayBox.update(dayData);
     }
 

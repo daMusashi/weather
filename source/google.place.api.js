@@ -19,11 +19,16 @@ function GooglePlaceAPI(){
         console.log("VARNING!!! Google Maps API INTE LADDAT");
         this.geocoder = false;
     }
+
+    this.onChangeListers = new HandlerStack();
 }
 
-GooglePlaceAPI.prototype.setOnChangeListener = function(listener, listenerSource){
-    this.listener = listener;
-    this.listenerSource = listenerSource || null;
+/**
+ * Lägger till onChange lyssnare
+ * @param {Handler} listener
+ */
+GooglePlaceAPI.prototype.addOnChangeListener = function(listener){
+    this.onChangeListers.add(listener);
 };
 
 GooglePlaceAPI.prototype.getPlaceFromCoord = function(lat, long){
@@ -41,13 +46,7 @@ GooglePlaceAPI.prototype.getPlaceFromCoord = function(lat, long){
                 console.log("Plats "+place);
                 //console.log(me.listener);
                 //console.log(me.listenerSource);
-                if(me.listener) {
-                    if (me.listenerSource) {
-                        me.listener.call(me.listenerSource, place, me.listenerSource);
-                    } else {
-                        me.listener(place);
-                    }
-                }
+                me.onChangeListers.handlerCall(place);
             } else {
                 console.log('Geocoder hittade inget platsnamn');
             }

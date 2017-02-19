@@ -9,7 +9,7 @@
  */
 function DataAdapterSMHI(approvedTimeUTC){
 
-    this._dataset = new ProviderDataset(approvedTimeUTC);
+    this._dataset = new ForecastDataset(approvedTimeUTC);
     this._dataset.provider = "SMHI";
     this._dataset.providerDesc = "<p>SMHI, Sveriges meteorologiska och hydrologiska institut, är en expertmyndighet under Miljö- och energidepartementet."+
         "Vi ser hela samhället som våra 'kunder'; privatpersoner, myndigheter, politiker, forskare och företag.</p>"+
@@ -29,7 +29,7 @@ DataAdapterSMHI.prototype.addDataItem = function(responseDataItem){
 };
 
 /**
- * Konverterar tillagd responsdata addDataItem) till app dataitems (ForecastDataItem) och returnerar ett dataset (ProviderDataset)
+ * Konverterar tillagd responsdata addDataItem) till app dataitems (ForecastDataItem) och returnerar ett dataset (ForecastDataset)
  */
 DataAdapterSMHI.prototype.getDataset = function(){
 
@@ -83,8 +83,8 @@ DataAdapterSMHI.prototype.getDataset = function(){
                     break;
                 case "pcat": // nederbördstyp
                     var cat = responseItem.values[0] || 0;
-                    appDataItem.nederbord.set(cat, responseItem.unit);
-                    appDataItem.data.push(appDataItem.nederbord);
+                    appDataItem.nederbordTyp.set(cat, responseItem.unit);
+                    appDataItem.data.push(appDataItem.nederbordTyp);
                     break;
                 case "pmean": // medel av nederbördsintensitet i kg/m2/h, kan översättas som mm/h, se http://www.smhi.se/kunskapsbanken/meteorologi/hur-mats-nederbord-1.637
                     //this.nederbordMangd = new ForecastDataItemParameter("Nederbördsintensitet (medel)", item.values[0], item.unit);
@@ -110,37 +110,6 @@ DataAdapterSMHI.prototype.getDataset = function(){
 
     return this._dataset;
 
-    // skapar waetherDays
-    /*var dayItems = [];
-    var daysIndex = 0;
-
-    // skapar en array med items efter dag
-    for(var i = 0; i < this.weatherItems.length; i++){
-
-        var item = this.weatherItems[i];
-        var itemDay = item.dateobject.getDateString();
-        //console.log("processar "+itemDay);
-        if(itemDay in dayItems){
-            dayItems[itemDay].push(item);
-        } else {
-            // ser till att max maxDays läggs till
-            //console.log(daysIndex);
-            if(daysIndex < CONFIG.maxDays) {
-                dayItems[itemDay] = [];
-                daysIndex++;
-            } else {
-                break;
-            }
-
-        }
-    }
-
-    // Skapar dataDays-objekt of arrayn ovan och sparar i WeatherDays
-    for(dayIndex in dayItems){
-        var day = new ForecastDay();
-        day.addItems(dayItems[dayIndex]);
-        this.weatherDays.push(day);
-    }*/
 };
 
 // returnerar dataItem närmast givet datetime

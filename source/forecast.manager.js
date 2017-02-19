@@ -57,17 +57,17 @@ ForecastManager.prototype.update = function(googlePlaceData){
 
 /**
  * Handler/listener för när (ny) data laddats
- * @param {ProviderDataset} data
+ * @param {ForecastDataset} data
  */
-ForecastManager.prototype.onDataChanged = function(data){
+ForecastManager.prototype.onDataChanged = function(dataset){
     console.log("Forecast Manager: data changed...");
     //console.log(data);
     if(this.loadingModalDOM) {
         $(this.loadingModalDOM).modal("hide");
     }
 
-    this._onChangeListeners.handlerCall(data);
+    this._onChangeListeners.handlerCall(dataset);
 
-    this.ui.update(data);
+    this.ui.update(dataset);
 
 };

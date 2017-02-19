@@ -13,9 +13,7 @@ function GoogleMapUI(container, defaultLat, defaultLong) {
     this.container = document.getElementById(container);
     this.mapWrapper = null;
 
-    this.listener = null;
-    this.listenerSource = null;
-
+    this.onChangeListers = new HandlerStack();
 
     var shortPress = 300; // används inte kör longPress istället
     var resetTimeout = 10000;
@@ -42,22 +40,18 @@ GoogleMapUI.prototype.init = function(){
 
     var me = this;
 
-    //this.mapAPI.addEventHandler("click", function(data){console.log("CLICK")}, this);
-    this.mapAPI.addEventHandler("long_mousedown", function(mapAPI){
+    var longMouseDownHandler = function(mapAPI){
         //console.log('long_mousedown EVENT HANDLER');
         //console.log(mapAPI);
         mapAPI.setCoord(mapAPI.lat, mapAPI.long);
 
         var data = {lat:mapAPI.lat, long:mapAPI.long};
         //console.log(me);
-        if(me.listener) {
-            if (me.listenerSource) {
-                me.listener.call(me.listenerSource, data);
-            } else {
-                me.listener(data);
-            }
-        }
-    }, this);
+        this.onChangeListers.handlerCall(data);
+    };
+
+    //this.mapAPI.addEventHandler("click", function(data){console.log("CLICK")}, this);
+    this.mapAPI.addEventHandler("long_mousedown", new Handler(longMouseDownHandler, this));
 
     /* long press
      me.mapAPI.map.panTo(event.latLng);
@@ -66,9 +60,12 @@ GoogleMapUI.prototype.init = function(){
      */
 };
 
-GoogleMapUI.prototype.setOnChangeListener = function(listener, listenerSource){
-    this.listener = listener;
-    this.listenerSource = listenerSource || null;
+/**
+ * Lägger onChange-lyssnare
+ * @param {Handler} listener
+ */
+GoogleMapUI.prototype.addOnChangeListener = function(listener){
+    this.onChangeListers.add(listener);
 };
 
 GoogleMapUI.prototype.setCoord = function(lat, long){

@@ -75,10 +75,10 @@ D3Linechart.prototype._getDayNightNederbordChartdata = function(dataobject){
     for(var i = 0; i < dataobject.weatherItems.length; i++){
         var item = dataobject.weatherItems[i];
         var time = item.dateobject;
-        chartDataNederbord.push({x:time, y:item.nederbord.value});
+        chartDataNederbord.push({x:time, y:item.nederbordTyp.value});
     }
 
-    return {day: chartDataDaytemp, night: chartDataNighttemp, nederbord: chartDataNederbord};
+    return {day: chartDataDaytemp, night: chartDataNighttemp, nederbordTyp: chartDataNederbord};
 }
 
 D3Linechart.prototype._createChartDayNightNederbord = function(chartData){
@@ -90,9 +90,9 @@ D3Linechart.prototype._createChartDayNightNederbord = function(chartData){
 
     // axlar
 
-    var xAxis = this._createXaxisTime(chartData.nederbord);
+    var xAxis = this._createXaxisTime(chartData.nederbordTyp);
     var yAxisTemp = this._createYaxisTemp(chartData.day.concat(chartData.night), "left"); // JOIN DAY NIGHT för total max/min
-    var yAxisNederbord = this._createYaxisNederbord(chartData.nederbord, "right");
+    var yAxisNederbord = this._createYaxisNederbord(chartData.nederbordTyp, "right");
 
 
 
@@ -145,7 +145,7 @@ D3Linechart.prototype._createChartDayNightNederbord = function(chartData){
 
     // nederbprd
     viz.append('svg:path')
-        .attr('d', lineFuncNederbord(chartData.nederbord))
+        .attr('d', lineFuncNederbord(chartData.nederbordTyp))
         .attr('stroke', 'blue')
         .attr('stroke-width', 2)
         .attr('fill', 'blue');

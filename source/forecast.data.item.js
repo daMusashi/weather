@@ -14,10 +14,15 @@ function ForecastDataItem(datetimeUTC){
      */
     this.dateobject = new Date(datetimeUTC);
     /**
+     * Unikt tidsvärde (UTC, millisekunder sed 1970)
+     * @type {number}
+     */
+    this.timeserial = this.dateobject.getTime();
+    /**
      * Datum för vilken datan gäller
      * @type {string}
      */
-    this.date = this.dateobject.getDateString();;
+    this.date = this.dateobject.getDateString();
     /**
      * Klockslag för vilken datan gäller
      * @type {string}
@@ -68,19 +73,19 @@ function ForecastDataItem(datetimeUTC){
      * Nederbördstyp. Branschkod, tolkning "regn", "snö" etc.
      * @type {ForecastDataItemParameter}
      */
-    this.nederbord = new ForecastDataItemParameter("Nederbörd");
+    this.nederbordTyp = new ForecastDataItemParameter("Nederbörd");
     /**
      * Nederbördsmängd. Medel av nederbördsintensitet i kg/m2/h, kan översättas som mm/h, se http://www.smhi.se/kunskapsbanken/meteorologi/hur-mats-nederbord-1.637, tolkning "regn", "snö" etc.
      * @type {ForecastDataItemParameter}
      */
     this.nederbordMangd = new ForecastDataItemParameter("Nederbördsintensitet (medel)");
     /**
-     * Nederbördsmängd. Max för medelmängden (se nederbord)
+     * Nederbördsmängd. Max för medelmängden (se nederbordTyp)
      * @type {ForecastDataItemParameter}
      */
     this.nederbordMangdMax = new ForecastDataItemParameter("Nederbördsintensitet (max)");
     /**
-     * Nederbördsmängd. Min för medelmängden (se nederbord)
+     * Nederbördsmängd. Min för medelmängden (se nederbordTyp)
      * @type {ForecastDataItemParameter}
      */
     this.nederbordMangdMin = new ForecastDataItemParameter("Nederbördsintensitet (min)");
@@ -108,6 +113,11 @@ function ForecastDataItem(datetimeUTC){
 
 
     //* Generererade params Ä//
+    /**
+     * Nederbörd. Ja/Nej
+     * @type {ForecastDataItemParameter}
+     */
+    this.nederbord = false;
     /**
      * Vinddatan sammanskriven i en sträng
      * @type {string}
@@ -159,7 +169,7 @@ ForecastDataItem.prototype.decodeValues = function(){
     }
     this.molnighet.tolkning = tolkning;
     // nedbördstyp
-    switch (this.nederbord.value) {
+    switch (this.nederbordTyp.value) {
         case 1:
             tolkning = "Snö";
             break;
@@ -181,7 +191,11 @@ ForecastDataItem.prototype.decodeValues = function(){
         default:
             tolkning = "";
     }
-    this.nederbord.tolkning = tolkning;
+    this.nederbordTyp.tolkning = tolkning;
+
+    if(this.nederbordMangd.value > 0){
+        this.nederbord = true;
+    }
 };
 
 ForecastDataItem.prototype._vindriktningToString = function(degree){
