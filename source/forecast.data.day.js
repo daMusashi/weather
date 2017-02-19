@@ -1,9 +1,12 @@
 /**
  * Created by Martin on 2015-12-11.
- *
- * Klassen håller prognospunkter som hör till samma dag (sortering per dag gör inte klassen själv)
  */
-function SMHIForecastDay(){
+
+/**
+ * Håller väder data som hör till samma dag
+ * @constructor
+ */
+function ForecastDay(){
     this.daytimeHours = {min: 8, max: 20};
     this.daytimeRepresentationHours = {min: 13, max: 14};
 
@@ -27,7 +30,7 @@ function SMHIForecastDay(){
 
 }
 
-SMHIForecastDay.prototype._update = function(){
+ForecastDay.prototype._update = function(){
     if(this.items.length > 0) {
         this.date = this.items[0].dateobject.getDateString();
         this.day = this.items[0].dateobject.getDayName();
@@ -70,7 +73,7 @@ SMHIForecastDay.prototype._update = function(){
 
 }
 
-SMHIForecastDay.prototype.addItem = function(dataItem, doUpdate){
+ForecastDay.prototype.addItem = function(dataItem, doUpdate){
     var update = doUpdate || true;
 
     this.items.push(dataItem);
@@ -81,7 +84,7 @@ SMHIForecastDay.prototype.addItem = function(dataItem, doUpdate){
 
 };
 
-SMHIForecastDay.prototype.addItems = function(dataItemsArray){
+ForecastDay.prototype.addItems = function(dataItemsArray){
     for(var i = 0; i < dataItemsArray.length; i++) {
         this.addItem(dataItemsArray[i], false);
     }
@@ -89,7 +92,7 @@ SMHIForecastDay.prototype.addItems = function(dataItemsArray){
     this._update();
 };
 
-SMHIForecastDay.prototype.clear = function(){
+ForecastDay.prototype.clear = function(){
     this.items = [];
 }
 

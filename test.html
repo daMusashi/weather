@@ -12,10 +12,10 @@
     <script src="source/google.place.api.js"></script>
     <script src="source/google.place.data.js"></script>
     <script src="source/google.place.manager.js"></script>
-    <script src="source/smhi.api.js"></script>
-    <script src="source/smhi.forecast.data.js"></script>
+    <script src="source/provider.api.smhi.js"></script>
+    <script src="source/provider.dataadapter.smhi.js"></script>
     <script src="source/forecast.data.item.js"></script>
-    <script src="source/smhi.forecast.data.day.js"></script>
+    <script src="source/forecast.data.day.js"></script>
     <script src="source/d3.linechart.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/bootswatch.css">
@@ -60,7 +60,7 @@
             place.setOnChangeListener(platsChanged);
             place.getPlaceFromCoord(59.3991737, 13.5190958);
 
-            api = new SMHIForecastAPI();
+            api = new ProviderAPISMHI();
             api.setOnChangeListener(dataChanged);
 
             viz = new D3Linechart("viz");

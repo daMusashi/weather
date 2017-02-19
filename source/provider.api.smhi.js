@@ -10,7 +10,7 @@
  * Objekt som innehåller API-calls för SMHI's API
  * @constructor
  */
-function SMHIForecastAPI(){
+function ProviderAPISMHI(){
 	this._onChangeHandlers = new HandlerStack();
 }
 
@@ -18,7 +18,7 @@ function SMHIForecastAPI(){
  * Lägger till listener för händelsen (ny) data laddad (on change)
  * @param {Handler} listener
  */
-SMHIForecastAPI.prototype.addOnChangeListener = function(listener){
+ProviderAPISMHI.prototype.addOnChangeListener = function(listener){
     this._onChangeHandlers.add(listener);
 };
 
@@ -26,8 +26,10 @@ SMHIForecastAPI.prototype.addOnChangeListener = function(listener){
  * Hämtar ett nytt dataset från SMHI's API, baserat på en plats
  * @param {GooglePlaceData} googlePlaceData
  */
-SMHIForecastAPI.prototype.update = function(googlePlaceData){
+ProviderAPISMHI.prototype.update = function(googlePlaceData){
 	var place = googlePlaceData;
+
+	console.log(place);
 
 	var lat = place.lat.toFixed(4);
 	var long = place.long.toFixed(4);
@@ -39,20 +41,18 @@ SMHIForecastAPI.prototype.update = function(googlePlaceData){
 
 	$.get(callBase)
   		.done(function( data ) {
-			//console.log("DATA LOADED");
-    		//console.log(data);
+			console.log("DATA LOADED");
+    		console.log(data);
 
-			var forecast = new SMHIForecastAPIData(data.approvedTime, place);
+			var provider = new DataAdapterSMHI(data.approvedTime);
 
 			for(var i = 0; i < data.timeSeries.length; i++){
-				forecast.addDataItem(data.timeSeries[i].validTime, data.timeSeries[i].parameters);
+				provider.addDataItem(data.timeSeries[i]);
 			}
 
-			forecast.process();
+			var dataset = provider.getDataset();
 
-			//console.log(me.source);
-			//console.log(me.callback);
-            me._onChangeHandlers.handlerCall(forecast);
+            me._onChangeHandlers.handlerCall(dataset);
   		})
   		.fail(function() {
     		console.log("VARNING! Kunde inte få forecats fråm SMHI");

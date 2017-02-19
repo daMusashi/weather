@@ -4,20 +4,18 @@
 
 /**
  * Manager för all väder-data
- * @param {Weather} app - Appen
  * @constructor
  */
-function ForecastManager(app){
-    this._app = app;
+function ForecastManager(){
 
     var heroesContainerId = "panel-heroes";
     var daysContainerId = "days-container";
 
     /**
      * Håller API för väderdatan (förvalt SMHI)
-     * @type {SMHIForecastAPI}
+     * @type {ProviderAPISMHI}
      */
-    this.api = new SMHIForecastAPI();
+    this.api = new ProviderAPISMHI();
     this.api.addOnChangeListener(new Handler(this.onDataChanged, this));
 
     /**
@@ -43,18 +41,25 @@ ForecastManager.prototype.addOnChangeListener = function(listener){
     this._onChangeListeners.add(listener);
 };
 
-ForecastManager.prototype.update = function(googlePlaceData, me){
-    var me = me || this;
+/**
+ * Uppdaterar väder-datan (via API Provider)
+ * @param {GooglePlaceData} googlePlaceData
+ */
+ForecastManager.prototype.update = function(googlePlaceData){
     var plats = googlePlaceData || this.googlePlatsData;
 
     if(plats) {
         this.googlePlatsData = plats;
         $(this.loadingModalDOM).modal();
-        me.api.update(this.googlePlatsData);
+        this.api.update(this.googlePlatsData);
     }
 };
 
-ForecastManager.prototype.onDataChanged = function(data, me){
+/**
+ * Handler/listener för när (ny) data laddats
+ * @param {ProviderDataset} data
+ */
+ForecastManager.prototype.onDataChanged = function(data){
     console.log("Forecast Manager: data changed...");
     //console.log(data);
     if(this.loadingModalDOM) {
@@ -64,20 +69,5 @@ ForecastManager.prototype.onDataChanged = function(data, me){
     this._onChangeListeners.handlerCall(data);
 
     this.ui.update(data);
-
-    //UIFactory.scrollify(this.dayItemsContainer, true, false);
-    //initWeatherUIFunctions();
-    //responsify();
-
-    // item test
-    /*var table = document.createElement("table");
-    for(var i = 0; i < data.weatherItems.length; i++) {
-        var itemUI = data.weatherItems[i].getUI();
-        table.appendChild(itemUI.getTdDOM());
-    }
-    c.appendChild(table);*/
-
-
-
 
 };

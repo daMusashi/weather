@@ -7,7 +7,7 @@
  * Håller speciella värden från aktuellt dataset såsom max/min nedebörd, vind, temp samt när nederbörd startar/slutar
  * @constructor
  */
-function SMHIForecastHerovalues(){
+function ForecastHerovalues(){
     /**
      * Item för Max temp i dataset
      * @type {ForecastDataItem}
@@ -42,8 +42,8 @@ function SMHIForecastHerovalues(){
 
 /**
  *  Uppdatera objektet med ett nytt dataset
- * @param {SMHIForecastAPIData} data
+ * @param {DataAdapterSMHI} data
  */
-SMHIForecastHerovalues.prototype.update = function(data){
+ForecastHerovalues.prototype.update = function(data){
 
 };
