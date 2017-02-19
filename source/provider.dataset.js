@@ -30,10 +30,15 @@ function ProviderDataset(approvedTimeUTC){
     this.providerUrl = "";
 
     /**
-     * Datan från provider konverterade till ForecastDataItem
+     * Datan från provider konverterade till {@link ForecastDataItem}
      * @type {Array}
      */
     this.dataItems = [];
+    /**
+     * Datan från provider konverterade till {@link ForecastDay}
+     * @type {Array}
+     */
+    this.dataDays = [];
 }
 
 /**
@@ -42,4 +47,12 @@ function ProviderDataset(approvedTimeUTC){
  */
 ProviderDataset.prototype.addItem = function(dataItem){
     this.dataItems.push(dataItem);
-}
+};
+
+/**
+ * Beräknar och sorterar. Kör när all data är tillagd
+ */
+ProviderDataset.prototype.process = function(){
+
+};
+

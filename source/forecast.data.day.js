@@ -2,6 +2,7 @@
  * Created by Martin on 2015-12-11.
  */
 
+
 /**
  * Håller väder data som hör till samma dag
  * @constructor

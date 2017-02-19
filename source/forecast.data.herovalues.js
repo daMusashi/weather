@@ -2,7 +2,6 @@
  * Created by Martin on 2017-02-18.
  */
 
-
 /**
  * Håller speciella värden från aktuellt dataset såsom max/min nedebörd, vind, temp samt när nederbörd startar/slutar
  * @constructor
