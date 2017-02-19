@@ -33,7 +33,7 @@ SMHIForecastUI.prototype._buildUI = function(){
     //this.heroItemsContainer.appendChild(div);
 
     /*for(var j = 0; j < 4; j++){
-        this.laterBoxes[j] = new UIWeatherPanel(["hero-box", "hero-box-"+(j+1)]);
+        this.laterBoxes[j] = new UiPanel(["hero-box", "hero-box-"+(j+1)]);
         this.laterBoxes[j].setId = "hero-box-"+j;
         this.heroItemsContainer.appendChild(this.laterBoxes[j].getDOM());
     }*/

@@ -8,26 +8,19 @@ function UiForecastRightnowInfo(classesArray){
     var classes = classesArray || [];
     classes.push("nederbordTyp-box");
 
-    this.box = new UIWeatherPanel("nederbordTyp-box-panel1", classes);
+    this.box = new UiPanel("nederbordTyp-box-panel1", classes);
     this.box.setId = "nederbordTyp-box";
-    this.box.setHeader("Just nu");
+    this.box.setHeader("Kommande");
 }
 
 UiForecastRightnowInfo.prototype.update = function(heroItems){
     this.box.clear();
 
-    var now = $("<div>");
-    $(now).addClass("weather-item");
-    $(now).addClass("hero-item");
-    var nowTemp = $("<p>");
-    $(nowTemp).addClass("temp");
-    $(nowTemp).addClass("wr-value");
-    $(nowTemp).text(heroItems.nowItem.temp.value + heroItems.nowItem.temp.unit);
-    $(now).append(nowTemp);
-
     var nederbord = $("<div>");
     $(nederbord).addClass("weather-item");
     $(nederbord).addClass("hero-item");
+    var nederbordTitel = $("<h3>Nederbörd</h3>");
+    $(nederbord).append(nederbordTitel);
 
     var nederbordStart = $("<p>");
     $(nederbordStart).addClass("nederbord");
@@ -62,9 +55,42 @@ UiForecastRightnowInfo.prototype.update = function(heroItems){
     $(nederbord).append(nederbordStart);
     $(nederbord).append(nederbordEnd);
 
-    this.box.append(now);
-    this.box.append(nederbord);
 
+    var first = this._getNextItemDOM(heroItems.firstItem, "Första");
+    var now = this._getNextItemDOM(heroItems.nowItem, "Nu");
+    var next = this._getNextItemDOM(heroItems.nextItem, "Snart +"+CONFIG.nextDuration+"h");
+    var later = this._getNextItemDOM(heroItems.laterItem, "Senare +"+CONFIG.laterDuration+"h");
+
+    this.box.append(nederbord);
+    //this.box.append(first);
+    this.box.append(now);
+    this.box.append(next);
+    this.box.append(later);
+
+};
+
+UiForecastRightnowInfo.prototype._getNextItemDOM = function(item, titel){
+    var now = new Date();
+    var ui = new UiDataItem(item);
+    var itemDOM = ui.getSmallDOM();
+    var box = $("<div>");
+    $(box).addClass("next-item");
+    var titel = $("<h3>"+titel+"</h3>");
+    $(box).append(titel);
+    var tid = $("<p>");
+    $(tid).addClass("time");
+    $(tid).addClass("wr-value");
+    if(now.getDayName() == item.day) {
+        $(tid).text(item.time);
+    } else {
+        $(tid).text(item.day + " " + item.time);
+    }
+
+    $(box).append(titel);
+    $(box).append(itemDOM);
+    $(box).append(tid);
+
+    return box;
 };
 
 UiForecastRightnowInfo.prototype.getDOM = function(){

@@ -11,7 +11,7 @@ function SMHIForecastDayUI(id, classesArray){
     var classes = classesArray || [];
     //classes.push("day-box");
 
-    this.box = new UIWeatherPanel(htmlId, classes);
+    this.box = new UiPanel(htmlId, classes);
 }
 
 SMHIForecastDayUI.prototype.update = function(dayDataobject){
@@ -23,20 +23,22 @@ SMHIForecastDayUI.prototype.update = function(dayDataobject){
     var id = this._data.date.replace(/\D+/g, '');
 
     if(this._data.daytimeItem) {
-        var daytimeHeroUI = new SMHIForecastUIDataItemBig(this._data.daytimeItem);
-        var daytimeListUI = new SMHIForecastUIDataItemList(this._data.dayItems);
+        var daytimeHeroUI = new UiDataItem(this._data.daytimeItem);
+        var daytimeHeroDOM = daytimeHeroUI.getBigDOM();
+        var daytimeListDOM = daytimeHeroUI.getListItemDOM();
         var div = document.createElement("div");
-        div.appendChild(daytimeHeroUI);
-        div.appendChild(daytimeListUI);
+        div.appendChild(daytimeHeroDOM);
+        div.appendChild(daytimeListDOM);
         this.box.addPanel(div, "Dag", "day");
     }
 
     if(this._data.nighttimeItem) {
-        var nighttimeHeroUI = new SMHIForecastUIDataItemBig(this._data.nighttimeItem);
-        var nighttimeListUI = new SMHIForecastUIDataItemList(this._data.nightItems);
+        var nighttimeHeroUI = new UiDataItem(this._data.daytimeItem);
+        var nighttimeHeroDOM = nighttimeHeroUI.getBigDOM();
+        var nighttimeListDOM = nighttimeHeroUI.getListItemDOM();
         var div = document.createElement("div");
-        div.appendChild(nighttimeHeroUI);
-        div.appendChild(nighttimeListUI);
+        div.appendChild(nighttimeHeroDOM);
+        div.appendChild(nighttimeListDOM);
         this.box.addPanel(div, "Natt", "night");
     }
 

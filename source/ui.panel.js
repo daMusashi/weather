@@ -1,7 +1,7 @@
 /**
  * Created by Martin on 2016-01-13.
  */
-function UIWeatherPanel(id, classesArray){
+function UiPanel(id, classesArray){
     this.id = id;
     this.panels = [];
     var classes = classesArray || [];
@@ -9,8 +9,6 @@ function UIWeatherPanel(id, classesArray){
     this.box = document.createElement("div");
     $(this.box).addClass("weather-panel");
     $(this.box).attr("id", this.id);
-    //$(this.box).addClass("flex-item");  - sätter flex-egenskaper på weahter-panel i CSS istället
-    //$(this.box).addClass("flex-panel");  - sätter flex-egenskaper på weahter-panel i CSS istället
 
     for(var i = 0; i < classes.length; i++){
         $(this.box).addClass(classes[i]);
@@ -38,7 +36,7 @@ function UIWeatherPanel(id, classesArray){
 
 }
 
-UIWeatherPanel.prototype.addPanel = function(dom, label, panelType, classesArray){
+UiPanel.prototype.addPanel = function(dom, label, panelType, classesArray){
     this.panels.push(panelType);
     var classes = classesArray || [];
 
@@ -56,7 +54,7 @@ UIWeatherPanel.prototype.addPanel = function(dom, label, panelType, classesArray
     this.content.appendChild(panel);
 }
 
-UIWeatherPanel.prototype._addNavItem = function(label, panelType){
+UiPanel.prototype._addNavItem = function(label, panelType){
     var navItem = document.createElement("a");
     $(navItem).text(label);
     $(navItem).attr("href", "#");
@@ -73,20 +71,20 @@ UIWeatherPanel.prototype._addNavItem = function(label, panelType){
     this.nav.appendChild(navItem);
 }
 
-UIWeatherPanel.prototype._resetPanels = function(){
+UiPanel.prototype._resetPanels = function(){
     var panelId = "#" + this.id;
     $(panelId + " .panel").removeClass("active");
     $(panelId + " .panel-link").removeClass("active");
 }
 
-UIWeatherPanel.prototype.showPanel = function(panelType){
+UiPanel.prototype.showPanel = function(panelType){
     this._resetPanels();
     var paneId = "#" + this.id;
     $(paneId + " .panel-"+panelType).addClass("active");
     $(paneId + " .panel-link-"+panelType).addClass("active");
 }
 
-UIWeatherPanel.prototype.setHeader = function(boxTitleText, boxSubtitleText){
+UiPanel.prototype.setHeader = function(boxTitleText, boxSubtitleText){
     var titleText = boxTitleText || null;
     var subtitleText = boxSubtitleText || null;
 
@@ -95,27 +93,27 @@ UIWeatherPanel.prototype.setHeader = function(boxTitleText, boxSubtitleText){
 
 };
 
-UIWeatherPanel.prototype.addClass = function(newClass){
+UiPanel.prototype.addClass = function(newClass){
     $(this.box).addClass(newClass);
 };
 
-UIWeatherPanel.prototype.removeClass = function(oldClass){
+UiPanel.prototype.removeClass = function(oldClass){
     $(this.box).removeClass(oldClass);
 };
 
-UIWeatherPanel.prototype.setId = function(id){
+UiPanel.prototype.setId = function(id){
     this.id = id;
     this.box.id = id;
 };
 
-UIWeatherPanel.prototype.clear = function(dom){
+UiPanel.prototype.clear = function(dom){
     this.content.innerHTML = "";
 };
 
-UIWeatherPanel.prototype.append = function(dom){
+UiPanel.prototype.append = function(dom){
     $(this.content).append(dom);
 };
 
-UIWeatherPanel.prototype.getDOM = function(){
+UiPanel.prototype.getDOM = function(){
     return this.box;
 };

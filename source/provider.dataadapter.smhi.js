@@ -111,19 +111,3 @@ DataAdapterSMHI.prototype.getDataset = function(){
     return this._dataset;
 
 };
-
-// returnerar dataItem närmast givet datetime
-DataAdapterSMHI.prototype.getClosestItem = function(dateObj){
-    var date = dateObj || new Date();
-    var items = this.weatherItems.slice();
-
-    items.sort(function(aItem, bItem){
-        return Math.abs(1 - aItem.dateobject / date) - Math.abs(1 - bItem.dateobject / date);
-    });
-
-    //console.log("LETAR närmast till - "+ date);
-    //console.log("HITTADE - "+ items[0].dateobject);
-    //console.log(items);
-
-    return items[0];
-};

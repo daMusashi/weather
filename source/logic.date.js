@@ -48,12 +48,21 @@ Date.prototype.isWeekend = function(){
 
 };
 
+Date.prototype.addHours = function (hours){
+    this.setHours(this.getHours()+hours);
+};
+
 Date.prototype.getDateString = function (){
     return this.toLocaleDateString();
 };
 
 Date.prototype.getTimeString = function (){
-    return "kl."+this._addZero(this.getHours())+":"+this._addZero(this.getMinutes());
+    return this._addZero(this.getHours())+":"+this._addZero(this.getMinutes());
+};
+
+Date.prototype.getDateTimeString = function (seperator){
+    var sep = seperator || " ";
+    return this.getDateString() + sep + this.getTimeString();
 };
 
 Date.prototype.diff = function (dateObj){

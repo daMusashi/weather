@@ -29,6 +29,11 @@ function ForecastDataItem(datetimeUTC){
      */
     this.time = this.dateobject.getTimeString();
     /**
+     * Datum OCH Klockslag för vilken datan gäller
+     * @type {string}
+     */
+    this.datetime = this.dateobject.getDateTimeString(" | ");
+    /**
      * Veckodagsnamnet för datan gäller
      * @type {string}
      */
@@ -193,8 +198,37 @@ ForecastDataItem.prototype.decodeValues = function(){
     }
     this.nederbordTyp.tolkning = tolkning;
 
+
+    // Nedbördsmängd
+    // Baseras på vanlig klassifiering, se http://www.smhi.se/kunskapsbanken/meteorologi/nederbordsintensitet-1.19163
+
+    var adjektiv = "Lätt";
+    var typ = this.nederbordTyp.tolkning;
+    var mangd = this.nederbordMangd.value;
+    if(typ.toLowerCase() == "snö") {
+        // egen tolkning efter snabbstudier av data, termer från http://www.smhi.se/kunskapsbanken/meteorologi/nederbordsintensitet-1.19163
+        if (mangd > 0.2) {
+            adjektiv = "Måttligt";
+        }
+        if (mangd > 0.6) {
+            adjektiv = "Tätt";
+        }
+    } else {
+        // från http://www.smhi.se/kunskapsbanken/meteorologi/nederbordsintensitet-1.19163
+        if (mangd > 0.5) {
+            adjektiv = "Måttligt";
+        }
+        if (mangd > 4) {
+            adjektiv = "Starkt";
+        }
+    }
+    this.nederbordMangd.tolkning =  adjektiv + " " + typ.toLowerCase();
+
+
     if(this.nederbordMangd.value > 0){
         this.nederbord = true;
+    } else {
+        this.nederbordMangd.tolkning = "uppehåll";
     }
 };
 

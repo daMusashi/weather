@@ -23,14 +23,12 @@ node C:\Users\Martin\AppData\Roaming\npm\node_modules\uglify-js\bin\uglifyjs^
  	%source%forecast.manager.js^
  	%source%provider.api.smhi.js^
  	%source%provider.dataadapter.smhi.js^
- 	%source%forecast.data.item.js^
+ 	%source%forecast.dataitem.js^
  	%source%forecast.data.day.js^
  	%source%smhi.forecast.ui.js^
- 	%source%smhi.forecast.ui.weahterpanel.js^
+ 	%source%ui.panel.js^
  	%source%smhi.forecast.ui.day.js^
- 	%source%smhi.forecast.ui.item.factory.js^
- 	%source%smhi.forecast.ui.item.list.js^
- 	%source%smhi.forecast.ui.item.big.js^
+ 	%source%ui.forecast.dataitem.js^
  	%source%smhi.forecast.ui.item.hero.js^
  	%source%ui.forecast.rightnow.js^
  	%source%ui.dialogs.js^

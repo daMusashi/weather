@@ -3,7 +3,7 @@
  */
 function CONFIG() {};
 
-CONFIG.maxDays = 10;
+CONFIG.maxDays = 8;
 
 // temp
 CONFIG.coldLimit = 0;
@@ -13,6 +13,10 @@ CONFIG.warmLimit = 20;
 CONFIG.colorWindArrow = [169, 222, 245];
 CONFIG.warnForByarAt = 14; // starkvind - om vanlig vind mindre, varnar för byar större än
 CONFIG.supressWindUnder = 8; // > 8 = frisk vind
+
+// heroes
+CONFIG.nextDuration = 2; // timmar
+CONFIG.laterDuration = 6; // timmar
 
 // map
 CONFIG.GoogleMapLongPressTimeoutDuration = 500;

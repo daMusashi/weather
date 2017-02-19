@@ -8,10 +8,25 @@
  */
 function ForecastHeroItems(){
     /**
+     * Item i datasetet med tidigast tid
+     * @type {ForecastDataItem}
+     */
+    this.firstItem = null;
+    /**
      * Item för nuvrande tid
      * @type {ForecastDataItem}
      */
     this.nowItem = null;
+    /**
+     * Item för kommande "nästa" tid - "Nästa" bestäms i CONFIG, def +2 timmar
+     * @type {ForecastDataItem}
+     */
+    this.nextItem = null;
+    /**
+     * Item för kommande "later" tid - "later" bestäms i CONFIG, def +6 timmar
+     * @type {ForecastDataItem}
+     */
+    this.laterItem = null;
     /**
      * Item för Max temp i dataset
      * @type {ForecastDataItem}

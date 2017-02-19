@@ -72,7 +72,14 @@ ForecastDataset.prototype.process = function(){
        }
 
     });
-    this.heroItems.nowItem = this.dataItems[0];
+
+    this.heroItems.firstItem = this.dataItems[0];
+    var kommandeTid = new Date();
+    this.heroItems.nowItem = this.getClosestItem(kommandeTid);
+    kommandeTid.addHours(CONFIG.nextDuration);
+    this.heroItems.nextItem = this.getClosestItem(kommandeTid);
+    kommandeTid.addHours(CONFIG.laterDuration-CONFIG.nextDuration);
+    this.heroItems.laterItem = this.getClosestItem(kommandeTid);
 
     // loopar igenom dataItems och extreherar värden och objekt
     var hottest = -100;
@@ -166,3 +173,23 @@ ForecastDataset.prototype.process = function(){
     console.log(this.heroItems);
 };
 
+/**
+ * Returnerar data item närmast tiden
+ * @param {Date} dateObj
+ * @returns {ForecastDataItem}
+ */
+ForecastDataset.prototype.getClosestItem = function(dateObj){
+    var date = dateObj || new Date();
+    var serial = date.getTime();
+    var items = this.dataItems.slice(); // kopierar för omsortering
+
+    items.sort(function(a, b){
+        return Math.abs(1 - a.timeserial / serial) - Math.abs(1 - b.timeserial / serial);
+    });
+
+    //console.log("LETAR närmast till - "+ date);
+    //console.log("HITTADE - "+ items[0].dateobject);
+    //console.log(items);
+
+    return items[0];
+};
