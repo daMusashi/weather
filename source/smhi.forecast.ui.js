@@ -1,9 +1,9 @@
 /**
  * Created by Martin on 2015-12-12.
  */
-function SMHIForecastUI(heroContainerId, daysContainerId){
-    this.heroItemsContainer = document.getElementById(heroContainerId);
-    this.dayItemsContainer = document.getElementById(daysContainerId);
+function SMHIForecastUI(){
+    this.nextItemsContainer = document.getElementById(CONFIG.nextPanelContainerId);
+    this.dayItemsContainer = document.getElementById(CONFIG.daysPanelContainerId);
 
     this.vizContainerId = "viz-container";
 
@@ -14,28 +14,28 @@ function SMHIForecastUI(heroContainerId, daysContainerId){
 
     this._buildUI();
 
-    this.viz = new D3Linechart(this.heroItemsContainer.id);
+    this.viz = new D3Linechart(this.nextItemsContainer.id);
     $(this.viz.dom).addClass("flex-5");
 }
 
 SMHIForecastUI.prototype._buildUI = function(){
     for(var i = 0; i < CONFIG.maxDays; i++){
-        this.dayBoxes[i] = new SMHIForecastDayUI("day-box-"+i, ["day-box"]);
+        this.dayBoxes[i] = new UiForecastDay("day-box-"+i, ["day-box"]);
         this.dayItemsContainer.appendChild(this.dayBoxes[i].getDOM());
     }
 
-    this.rightnowBox = new UiForecastRightnowInfo(["hero-box", "flex-1"]);
-    this.heroItemsContainer.appendChild(this.rightnowBox.getDOM());
+    this.rightnowBox = new UiForecastNextInfo();
+    this.nextItemsContainer.appendChild(this.rightnowBox.getDOM());
 
     //var div = document.createElement("div");
     //$(div).addClass("flex-5");
     //$(div).attr("id", this.vizContainerId);
-    //this.heroItemsContainer.appendChild(div);
+    //this.nextItemsContainer.appendChild(div);
 
     /*for(var j = 0; j < 4; j++){
         this.laterBoxes[j] = new UiPanel(["hero-box", "hero-box-"+(j+1)]);
         this.laterBoxes[j].setId = "hero-box-"+j;
-        this.heroItemsContainer.appendChild(this.laterBoxes[j].getDOM());
+        this.nextItemsContainer.appendChild(this.laterBoxes[j].getDOM());
     }*/
 
 }

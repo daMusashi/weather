@@ -11,9 +11,6 @@ $(document).ready(function(){
     }
 })
 
-$(window).on("resize", function(){
-    Weather.ui.manageSizes();
-});
 
 // Google API kan vara färdigtladdat EFTER document.ready
 function apiloaded(){
@@ -52,11 +49,7 @@ Weather.init = function(){
      */
     this.plats = new GooglePlaceManager(this);
     this.plats.addOnChangeListener(new Handler(platsChanged));
-    /**
-     * Håller radarbild
-     * @type {SMHIRadarUI}
-     */
-    this.radar = new SMHIRadarUI(document.getElementById("panel-radar"));
+
     //radar.start();
     /**
      * Håller UI Header
@@ -87,8 +80,13 @@ Weather.init = function(){
     this.plats.findPlace();
 
     this.ui.init();
-    this.ui.manageSizes();
+    this.ui.manageLayout();
+
+    $(window).on("resize", function(){
+        Weather.ui.manageLayout();
+    });
 };
+
 
 /**
  * Handler för när plats ändras

@@ -1,0 +1,54 @@
+/* Inre layout weather-panels */
+
+.weather-panel {
+  // som flex-panel
+  display: flex;
+  flex-direction: column;
+  // som flex-item
+  flex: 1 0 auto;
+  margin: $panel-gutter/2;
+
+  header {
+    //flex: 1 0 auto;
+  }
+  article {
+    flex: 1 0 auto;
+    position: relative;
+
+    .panel {
+      // heltäckande
+      @include cover();
+
+      .weather-item {
+        display: -webkit-flex;
+        display: flex;
+      }
+
+      .weather-item-list {
+        .weather-item {
+          position: static;
+          line-height: 2rem;
+
+          .weather-data {
+            flex-grow: 1;
+
+          }
+
+          .icon {
+            canvas {
+              height: 2rem;
+            }
+          }
+        }
+      }
+
+      .weather-item-big {
+        &.weather-item {
+          // heltäckande
+          //@include cover();
+          flex-direction: column;
+        }
+      }
+    }
+  }
+}

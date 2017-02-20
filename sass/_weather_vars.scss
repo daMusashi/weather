@@ -7,6 +7,8 @@ $color-body-grad-lighter:         lighten($color-body, 20%);
 $color-body-grad-darker:          darken($color-body, 10%);
 
 $color-hero:         #6E4F78;
+$color-hero-light: lighten($color-hero, 20%);
+$color-hero-dark: lighten($color-hero, 10%);
 
 $color-text: rgb(255, 255, 255);
 $color-text-mild: rgba(255, 255, 255, 0.5);

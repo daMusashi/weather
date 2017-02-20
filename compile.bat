@@ -27,10 +27,10 @@ node C:\Users\Martin\AppData\Roaming\npm\node_modules\uglify-js\bin\uglifyjs^
  	%source%forecast.data.day.js^
  	%source%smhi.forecast.ui.js^
  	%source%ui.panel.js^
- 	%source%smhi.forecast.ui.day.js^
+ 	%source%ui.forecast.day.js^
  	%source%ui.forecast.dataitem.js^
  	%source%smhi.forecast.ui.item.hero.js^
- 	%source%ui.forecast.rightnow.js^
+ 	%source%ui.forecast.next.js^
  	%source%ui.dialogs.js^
  	%source%ui.js^
  	%source%ui.windarrow.js^

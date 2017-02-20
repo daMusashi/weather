@@ -1,0 +1,40 @@
+.panel {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.weather-panel {
+  position: relative;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  text-align: center;
+  font-size: 0.9em;
+  min-width: 150px;
+
+  @include backgroundGrad(darken($color-bg-weather-boxes, 10%), $color-bg-weather-boxes);
+  &.weekend {
+    @include backgroundGrad($color-bg-weather-boxes, lighten($color-bg-weather-boxes, 10%));
+  }
+
+  h1, h2, h3, h4, p {
+    margin: 0px;
+    padding: 0px;
+  }
+
+  header {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.2em;
+
+    .title {
+
+    }
+    .subtitle {
+      font-size: 0.8em;
+      opacity: 0.5;
+    }
+  }
+
+} // weather-panel

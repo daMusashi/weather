@@ -1,0 +1,11 @@
+#panel-next {
+  .next-weather-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    .next-weather {
+      flex: 1;
+    }
+  }
+}

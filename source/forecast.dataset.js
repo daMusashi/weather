@@ -166,11 +166,10 @@ ForecastDataset.prototype.process = function(){
          var day = new ForecastDay();
          day.addItems(dayItems[dayIndex]); // lägger till hela arrayn med items för samma dag
          this.dataDays.push(day);
-         console.log(day);
      }
 
-    console.log("HERO ITEMS");
-    console.log(this.heroItems);
+    //console.log("HERO ITEMS");
+    //console.log(this.heroItems);
 };
 
 /**

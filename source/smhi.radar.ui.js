@@ -48,15 +48,6 @@ function SMHIRadarUI(container, mapheight){
     this.radarWrapper = document.createElement("div");
     $(this.radarWrapper).attr("id", "radar-wrapper");
 
-    var buttonWrapper = document.createElement("div");
-    $(buttonWrapper).attr("id", "radar-button-wrapper");
-    $(buttonWrapper).addClass("sidepanel-button");
-    this.button = document.createElement("a");
-    $(this.button).attr("id", "radar-button");
-    $(this.button).text(" ");
-
-    buttonWrapper.appendChild(this.button);
-    this.container.appendChild(buttonWrapper);
     this.container.appendChild(this.radarWrapper);
 
     this.canvas = document.createElement("canvas");
@@ -65,6 +56,7 @@ function SMHIRadarUI(container, mapheight){
     /*this.canvas.width = this.SMHIMapWidth;
     this.canvas.height = this.SMHIMapHeight;*/
 
+    var dim = {width: CONFIG.SMHIMapWidth, height: CONFIG.SMHIMapHeight};
     this.setDimension(this.calcDimension());
 
     this.radarWrapper.appendChild(this.canvas);
@@ -128,13 +120,13 @@ SMHIRadarUI.prototype.calcDimension = function(){
 
 SMHIRadarUI.prototype.setDimension = function(dim){
 
-    this.canvas.width = dim.width;
+    /*this.canvas.width = dim.width;
     this.canvas.height = dim.height;
     $(this.canvas).height(dim.height);
-    $(this.canvas).width(dim.width);
+    $(this.canvas).width(dim.width);*/
 
     //this.canvas.getContext("2d").scale((this.height/this.SMHIMapHeight)*this.view.zoom, (this.height/this.SMHIMapHeight)*this.view.zoom);
-    this.canvas.getContext("2d").scale(dim.height/this.SMHIMapHeight, dim.height/this.SMHIMapHeight);
+    //this.canvas.getContext("2d").scale(dim.height/this.SMHIMapHeight, dim.height/this.SMHIMapHeight);
 
     this.render();
 };

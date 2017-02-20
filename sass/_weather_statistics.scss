@@ -1,0 +1,17 @@
+#panel-next {
+  .next-item {
+    margin: 2px;
+
+    h3 {
+      background-color: $color-hero-dark;
+      font-size: 1.5em;
+    }
+
+  }
+  .nederbord {
+    background-color: $color-hero-light;
+  }
+  .next-weather {
+    background-color: $color-hero;
+  }
+}

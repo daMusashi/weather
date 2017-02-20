@@ -24,13 +24,13 @@ UiDataItem.prototype.getBigDOM = function(customClass){
 
     var wrapper = document.createElement("div");
     $(wrapper).addClass("weather-item");
-    $(wrapper).addClass("weather-item-big");
+    $(wrapper).addClass("big-item");
     $(wrapper).addClass("big");
     if(customClass){
         $(wrapper).addClass(customClass);
     }
 
-    var icon = this._createIconDOM();
+    var icon = this._createIconDOM(WeatherIcon.types.BIG);
     var temp = this._createTempValueDOM("p");
     var moln = this._createCloudcoverValueDOM("p");
     var nederbord = this._createPrecipitationValueDOM("p");
@@ -50,13 +50,13 @@ UiDataItem.prototype.getSmallDOM = function(customClass){
 
     var wrapper = document.createElement("div");
     $(wrapper).addClass("weather-item");
-    $(wrapper).addClass("weather-item-small");
+    $(wrapper).addClass("small-item");
     $(wrapper).addClass("small");
     if(customClass){
         $(wrapper).addClass(customClass);
     }
 
-    var icon = this._createIconDOM();
+    var icon = this._createIconDOM(WeatherIcon.types.SMALL);
     var temp = this._createTempValueDOM("p");
     var nederbord = this._createPrecipitationValueDOM("p");
 
@@ -68,16 +68,16 @@ UiDataItem.prototype.getSmallDOM = function(customClass){
 };
 
 UiDataItem.prototype.getListItemDOM = function(customClass){
-    var wrapper = document.createElement("div");
+    var wrapper = document.createElement("li");
     $(wrapper).addClass("weather-item");
     $(wrapper).addClass("list-item");
     if(customClass){
         $(wrapper).addClass(customClass);
     }
 
-    var time = base._createTimeValueDOM("p");
-    var icon = base._createIconDOM(false, true);
-    var temp = base._createTempValueDOM("p");
+    var time = this._createTimeValueDOM("p");
+    var icon = this._createIconDOM(WeatherIcon.types.SMALLSIMPLE);
+    var temp = this._createTempValueDOM("p");
 
     wrapper.appendChild(time);
     wrapper.appendChild(icon);
@@ -157,8 +157,14 @@ UiDataItem.prototype._createWindValueDOM = function(tag){
     return mainDOM;
 };
 
-UiDataItem.prototype._createIconDOM = function(big, simple){
-    var icon = new WeatherIcon(this._data, big, simple);
+/**
+ *
+ * @param {WeatherIcon.types} iconType
+ * @return {Element}
+ * @private
+ */
+UiDataItem.prototype._createIconDOM = function(iconType){
+    var icon = new WeatherIcon(this._data, iconType);
     var iconWrapper = document.createElement("div");
     $(iconWrapper).addClass("icon");
     $(iconWrapper).addClass("weather-data");

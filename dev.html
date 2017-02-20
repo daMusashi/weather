@@ -33,9 +33,9 @@
     <script src="source/forecast.manager.js"></script>
     <script src="source/smhi.forecast.ui.js"></script>
     <script src="source/ui.panel.js"></script>
-    <script src="source/smhi.forecast.ui.day.js"></script>
+    <script src="source/ui.forecast.day.js"></script>
     <script src="source/ui.forecast.dataitem.js"></script>
-    <script src="source/ui.forecast.rightnow.js"></script>
+    <script src="source/ui.forecast.next.js"></script>
     <script src="source/ui.canvas.sprite.js"></script>
     <script src="source/ui.header.js"></script>
     <script src="source/ui.footer.js"></script>
@@ -51,15 +51,19 @@
 <body>
     <div id="backdrop" class="winter day"></div>
     <div id="frame">
-        <header id="panel-header" class="panel panel flex-panel flex-item"></header>
-        <region id="panel-heroes" class="panel flex-panel flex-item"></region>
-        <region id="panel-days" class="panel flex-item">
-            <div id="days-container" class="inner flex-panel"></div>
-        </region>
-        <footer id="panel-footer" class="panel flex-panel flex-item"></footer>
+        <header id="panel-header" class="panel"></header>
+        <main id="content">
+            <div id="panel-statistics" class="panel">
+                <div id="panel-next" class="panel"></div>
+                <div id="panel-graph" class="panel"></div>
+                <div id="panel-radar" class="panel"></div>
+            </div>
+            <div id="panel-days" class="panel"></div>
+        </main>
+        <footer id="panel-footer" class="panel"></footer>
 
         <aside id="panel-map" class="panel side-panel"></aside>
-        <aside id="panel-radar" class="panel side-panel"></aside>
+        <aside id="panel-radarr" class="panel side-panel"></aside>
     </div>
 </body>
 <script>

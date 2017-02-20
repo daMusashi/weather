@@ -6,13 +6,21 @@
 
 @import "weather_vars";
 @import "weather_mixins";
-@import "weather_layout";
+@import "weather_colors";
+
+@import "weather_layout_main";
+@import "weather_layout_weatherpanel";
+@import "weather_layout_statistics";
+
 @import "weather_main";
 @import "weather_dialogs";
-@import "weather_sidepanels";
-@import "weather_colors";
 @import "weather_transitions";
+
+@import "weather_header";
+@import "weather_statistics";
 @import "weather_footer";
+
+@import "weather_panels";
 @import "weather_items";
 @import "weather_scroller";
 

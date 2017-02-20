@@ -1,18 +1,22 @@
 /**
  * Created by Martin on 2015-12-12.
  */
-function WeatherIcon(dataItem, big, simple){
-    this.storSize = 80;
-    this.litenSize = 40;
+
+/**
+ * Skapar en väder-icon med Canvas
+ * @param {ForecastDataItem} dataItem - Data item att göra icon för
+ * @param {WeatherIcon.types} type - Typ av icon: big, small etc.
+ * @return {Element|*}
+ * @constructor
+ */
+function WeatherIcon(dataItem, type){
+    this.size = CONFIG.bigSize;
+    this.type = type || WeatherIcon.types.BIG;
+    if(this.type == WeatherIcon.types.SMALL || this.type == WeatherIcon.types.SMALLSIMPLE){
+        this.size = CONFIG.smallSize;
+    }
 
     this._data = dataItem;
-    this.isSimple = simple || false; // simple = bara en ikon: sol, moln, regn eller snö
-    this.isBig = big || true;
-
-    this.size = this.litenSize;
-    if(this.isBig){
-        this.size = this.storSize;
-    }
 
     this.height = this.size;
     this.width = this.height;
@@ -20,7 +24,7 @@ function WeatherIcon(dataItem, big, simple){
     //this.width = this.height * this.scale;
 
     this.canvas = document.createElement("canvas");
-    this.canvas.id = "weaher-icon-"+this.height+"-"+this._data.id;
+    this.canvas.id = "weaher-icon-"+this.type+"-"+this._data.id;
     this.canvas.width = this.size;
     this.canvas.height = this.size;
 
@@ -34,21 +38,31 @@ function WeatherIcon(dataItem, big, simple){
     this.nederbordSprite = null;
     this.simpleSprite = null;
 
-    if(this.isSimple) {
-        this._addSimple(this.isBig);
+    if(this.type == WeatherIcon.types.SMALLSIMPLE || this.type == WeatherIcon.types.BIGSIMPLE) {
+        this._addSimple();
     } else {
-        this._addSky(this.isBig);
+        this._addSky();
     }
 
     return this.canvas;
 
 }
 
-WeatherIcon.prototype._addSky = function(isStor){
+WeatherIcon.types = {};
+WeatherIcon.types.BIG = "big";
+WeatherIcon.types.SMALL = "small";
+WeatherIcon.types.BIGSIMPLE = "big-simple";
+WeatherIcon.types.SMALLSIMPLE = "small-simple";
+
+WeatherIcon.prototype._addSky = function(){
+    var isStor = false;
+    if(this.type == WeatherIcon.types.BIG){
+        isStor = true;
+    }
 
     function skyLoaded(me){
         me.skySprite.render();
-        me._addNederbord();
+        me._addNederbord(isStor);
     }
 
     var file = "gfx/";
@@ -60,7 +74,7 @@ WeatherIcon.prototype._addSky = function(isStor){
     var dageEllerNatt = "_dag";
     var isDag = true;
     if(!isDag){
-        var dageEllerNatt = "_natt";
+        dageEllerNatt = "_natt";
     }
     switch(this._data.molnighet.value) {
         case 1:
@@ -97,8 +111,6 @@ WeatherIcon.prototype._addSky = function(isStor){
 };
 
 WeatherIcon.prototype._addNederbord = function(isStor){
-
-    isStor = isStor || true;
 
     function nederbordLoaded(me){
         if(me.nederbordSprite) {
@@ -144,16 +156,18 @@ WeatherIcon.prototype._addNederbord = function(isStor){
         }
 
         file += ".png";
-
-        this.nederbordSprite = new CanvasSprite(this.canvas.getContext("2d"), file, this.size, this.size);
+         this.nederbordSprite = new CanvasSprite(this.canvas.getContext("2d"), file, this.size, this.size);
         this.nederbordSprite.load(nederbordLoaded, this);
     } else {
         nederbordLoaded(this);
     }
 }
 
-WeatherIcon.prototype._addSimple = function(isStor){
-    isStor = isStor || true;
+WeatherIcon.prototype._addSimple = function(){
+    isStor = false;
+    if(this.type == WeatherIcon.types.BIGSIMPLE){
+        isStor = true;
+    }
 
     function simpleLoaded(me){
         if(me.simpleSprite) {

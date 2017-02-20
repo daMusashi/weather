@@ -8,9 +8,6 @@
  */
 function ForecastManager(){
 
-    var heroesContainerId = "panel-heroes";
-    var daysContainerId = "days-container";
-
     /**
      * Håller API för väderdatan (förvalt SMHI)
      * @type {ProviderAPISMHI}
@@ -22,7 +19,7 @@ function ForecastManager(){
      * Håller UI för väderdatan
      * @type {SMHIForecastUI}
      */
-    this.ui = new SMHIForecastUI(heroesContainerId, daysContainerId);
+    this.ui = new SMHIForecastUI();
 
     this.days = [];
 

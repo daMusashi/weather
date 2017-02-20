@@ -16,7 +16,7 @@ function UiPanel(id, classesArray){
 
     var header = document.createElement("header");
 
-    this.title = document.createElement("h4");
+    this.title = document.createElement("h2");
     $(this.title).addClass("title");
     header.appendChild(this.title);
 
@@ -24,14 +24,10 @@ function UiPanel(id, classesArray){
     $(this.subtitle).addClass("subtitle");
     header.appendChild(this.subtitle);
 
-    this.nav = document.createElement("nav");
-    $(this.nav).addClass("panel-nav");
-
     this.content = document.createElement("article");
     //$(this.content).addClass("flex-panel");
 
     this.box.appendChild(header);
-    this.box.appendChild(this.nav);
     this.box.appendChild(this.content);
 
 }
@@ -49,47 +45,21 @@ UiPanel.prototype.addPanel = function(dom, label, panelType, classesArray){
 
     panel.appendChild(dom);
 
-    this._addNavItem(label, panelType);
-
     this.content.appendChild(panel);
-}
+};
 
-UiPanel.prototype._addNavItem = function(label, panelType){
-    var navItem = document.createElement("a");
-    $(navItem).text(label);
-    $(navItem).attr("href", "#");
-    $(navItem).attr("data-for-panel", panelType);
-    $(navItem).addClass("panel-link");
-    $(navItem).addClass("panel-link-"+panelType);
-    var me = this;
-    $(navItem).on("click", function(){
-        me._resetPanels();
-        var panelType = $(navItem).attr("data-for-panel");
-        me.showPanel(panelType);
-    });
-
-    this.nav.appendChild(navItem);
-}
-
-UiPanel.prototype._resetPanels = function(){
-    var panelId = "#" + this.id;
-    $(panelId + " .panel").removeClass("active");
-    $(panelId + " .panel-link").removeClass("active");
-}
-
-UiPanel.prototype.showPanel = function(panelType){
-    this._resetPanels();
-    var paneId = "#" + this.id;
-    $(paneId + " .panel-"+panelType).addClass("active");
-    $(paneId + " .panel-link-"+panelType).addClass("active");
-}
 
 UiPanel.prototype.setHeader = function(boxTitleText, boxSubtitleText){
     var titleText = boxTitleText || null;
     var subtitleText = boxSubtitleText || null;
 
     $(this.title).text(titleText);
-    $(this.subtitle).text(subtitleText);
+    if(subtitleText) {
+        $(this.subtitle).text(subtitleText);
+        $(this.subtitle).removeClass("hide");
+    } else {
+        $(this.subtitle).addClass("hide");
+    }
 
 };
 

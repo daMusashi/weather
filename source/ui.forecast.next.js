@@ -1,24 +1,31 @@
 /**
  * Created by Martin on 2015-12-13.
  */
-function UiForecastRightnowInfo(classesArray){
-    // info när eventuell pågående nederbörd slutar
-    // info om när eventuell nästa nederbörd börjar
+
+/**
+ * Manager för kommande-data i next-panelen
+ * @param {Array} classesArray - En array med extra-klasser
+ * @constructor
+ */
+function UiForecastNextInfo(classesArray){
 
     var classes = classesArray || [];
-    classes.push("nederbordTyp-box");
+    classes.push("next-box");
 
-    this.box = new UiPanel("nederbordTyp-box-panel1", classes);
-    this.box.setId = "nederbordTyp-box";
+    this.box = new UiPanel("next", classes);
     this.box.setHeader("Kommande");
+
+    this._commonClass = "next-item";
 }
 
-UiForecastRightnowInfo.prototype.update = function(heroItems){
+UiForecastNextInfo.prototype.update = function(heroItems){
     this.box.clear();
 
+
+
     var nederbord = $("<div>");
-    $(nederbord).addClass("weather-item");
-    $(nederbord).addClass("hero-item");
+    $(nederbord).addClass(this._commonClass);
+    $(nederbord).addClass("nederbord");
     var nederbordTitel = $("<h3>Nederbörd</h3>");
     $(nederbord).append(nederbordTitel);
 
@@ -54,6 +61,7 @@ UiForecastRightnowInfo.prototype.update = function(heroItems){
 
     $(nederbord).append(nederbordStart);
     $(nederbord).append(nederbordEnd);
+    this.box.append(nederbord);
 
 
     var first = this._getNextItemDOM(heroItems.firstItem, "Första");
@@ -61,20 +69,23 @@ UiForecastRightnowInfo.prototype.update = function(heroItems){
     var next = this._getNextItemDOM(heroItems.nextItem, "Snart +"+CONFIG.nextDuration+"h");
     var later = this._getNextItemDOM(heroItems.laterItem, "Senare +"+CONFIG.laterDuration+"h");
 
-    this.box.append(nederbord);
-    //this.box.append(first);
-    this.box.append(now);
-    this.box.append(next);
-    this.box.append(later);
+    var nextWeatherBox = document.createElement("div");
+    $(nextWeatherBox).addClass("next-weather-box");
+    //$(nextWeatherBox).append(first);
+    $(nextWeatherBox).append(now);
+    $(nextWeatherBox).append(next);
+    $(nextWeatherBox).append(later);
+    this.box.append(nextWeatherBox);
 
 };
 
-UiForecastRightnowInfo.prototype._getNextItemDOM = function(item, titel){
+UiForecastNextInfo.prototype._getNextItemDOM = function(item, titel){
     var now = new Date();
     var ui = new UiDataItem(item);
     var itemDOM = ui.getSmallDOM();
     var box = $("<div>");
-    $(box).addClass("next-item");
+    $(box).addClass(this._commonClass);
+    $(box).addClass("next-weather");
     var titel = $("<h3>"+titel+"</h3>");
     $(box).append(titel);
     var tid = $("<p>");
@@ -93,6 +104,6 @@ UiForecastRightnowInfo.prototype._getNextItemDOM = function(item, titel){
     return box;
 };
 
-UiForecastRightnowInfo.prototype.getDOM = function(){
+UiForecastNextInfo.prototype.getDOM = function(){
     return this.box.getDOM();
 };
