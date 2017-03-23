@@ -12,7 +12,8 @@ function UiForecastNextInfo(classesArray){
     var classes = classesArray || [];
     classes.push("next-box");
 
-    this.box = new UiPanel("next", classes);
+    this.box = new UiPanel("next-container", classes);
+    $(this.box).addClass("ui-container");
     this.box.setHeader("Kommande");
 
     this._commonClass = "next-item";

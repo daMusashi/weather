@@ -1,7 +1,11 @@
-#panel-header {
+#header {
   //max-height: 3em;
 
-  #plats {
-    font-size: $header-min-title-height;
+  #plats-namn {
+    font-size: 1.5em;
+    display: inline-block;
+  }
+  #button-byt-plats {
+    margin-left: 1em;
   }
 }

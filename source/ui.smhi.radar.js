@@ -2,13 +2,13 @@
  * Created by Martin on 2015-12-10.
  */
 
-function SMHIRadarUI(container, mapheight){
-    this.SMHIMapWidth = CONFIG.SMHIMapWidth;
-    this.SMHIMapHeight = CONFIG.SMHIMapHeight;
-    this.MapAspectratio = this.SMHIMapWidth/this.SMHIMapHeight;
+function UiSMHIRadar(container){
+    this.mapWidth = CONFIG.SMHIMapWidth;
+    this.mapHeight = CONFIG.SMHIMapHeight;
+    this.mapAspectratio = this.mapWidth/this.mapHeight;
     this.radarMapsNum = CONFIG.SMHIMapsNum;
 
-    this.radarAPI = new SMHIRadarAPI(this.radarMapsNum, this._start, this);
+    this.radarAPI = new SMHIRadarAPI(this.radarMapsNum, new Handler(this._start, this));
 
     this.frameDelay = CONFIG.SMHIMapsFrameDelay;
     this.frameIndex = 0;
@@ -43,25 +43,25 @@ function SMHIRadarUI(container, mapheight){
      this.view = this.views[7];
      */
 
-    //this.zoom = 2;
+    this.zoom = 1;
 
-    this.radarWrapper = document.createElement("div");
-    $(this.radarWrapper).attr("id", "radar-wrapper");
+    this.box = new UiPanel("radar-container");
+    $(this.box).addClass("ui-container");
+    this.box.setHeader("Radar");
 
-    this.container.appendChild(this.radarWrapper);
+    //this.radarWrapper = document.createElement("div");
+    //$(this.radarWrapper).attr("_id", "radar-container");
+
+    this.box.appendTo(this.container);
 
     this.canvas = document.createElement("canvas");
-    this.canvas.id = "radar";
+    this.canvas._id = "radar";
     $(this.canvas).addClass("wr-item");
-    /*this.canvas.width = this.SMHIMapWidth;
-    this.canvas.height = this.SMHIMapHeight;*/
 
-    var dim = {width: CONFIG.SMHIMapWidth, height: CONFIG.SMHIMapHeight};
-    this.setDimension(this.calcDimension());
+    //this.radarWrapper.appendChild(this.canvas);
+    this.box.append(this.canvas);
 
-    this.radarWrapper.appendChild(this.canvas);
-
-
+    this.setDimension();
 
 
     // basemaps sprites
@@ -69,69 +69,79 @@ function SMHIRadarUI(container, mapheight){
     function basemapLoaded(me){
         me.spritesBaseLoaded++;
         if(me.spritesBaseLoaded == me.spritesBase.length){
-            //console.log("Alla basemaps har laddats");
-            me.renderBase();
+            console.log("radar base maps loaded");
+            me._renderBase();
         }
     }
 
     for(var i =0; i < this.baseMaps.length; i++){
-        var sprite = new CanvasSprite(this.canvas.getContext("2d"), this.baseMaps[i], this.SMHIMapWidth, this.SMHIMapHeight);
+        var sprite = new CanvasSprite(this.canvas.getContext("2d"), this.baseMaps[i], this.mapWidth, this.mapHeight);
         this.spritesBase.push(sprite);
+        console.log("loading radar base map");
         sprite.load(basemapLoaded, this);
         var lastSprite = sprite;
     }
 }
 
-SMHIRadarUI.prototype.update = function(){
+UiSMHIRadar.prototype.update = function(){
     this.radarAPI.update();
 };
 
-SMHIRadarUI.prototype._start = function(radarMaps){
+UiSMHIRadar.prototype._start = function(radarMaps){
     // radar sprites
 
     function radarmapLoaded(me){
         me.spritesradarLoaded++;
         if(me.spritesradarLoaded == me.spritesRadar.length){
-            //console.log("Alla radars har laddats");
+            console.log("radar maps loaded");
             var int = setInterval(me.nextRadar, me.frameDelay, me);
         }
     }
 
     for(var i =0; i < radarMaps.length; i++){
         var map = radarMaps[i];
-        var sprite = new CanvasSprite(this.canvas.getContext("2d"), map.url, this.SMHIMapWidth, this.SMHIMapHeight);
+        var sprite = new CanvasSprite(this.canvas.getContext("2d"), map.url, this.mapWidth, this.mapHeight);
+        console.log("loading radar maps");
         sprite.load(radarmapLoaded, this);
         this.spritesRadar.push(sprite);
     }
 
 };
 
-SMHIRadarUI.prototype.calcDimension = function(){
+UiSMHIRadar.prototype._calcDimension = function(){
 
     var dim = {};
 
-    //this.height = mapheight || this.SMHIMapHeight;
-    dim.height =  parseInt($(this.container).height());
-    //this.scale = (this.height/this.SMHIMapHeight)*this.zoom;
-    dim.width = parseInt(dim.height * this.MapAspectratio);
+    var containerHeight = $(this.container).height();
+    var containerWidth = $(this.container).width();
+    var containerAspectratio = containerWidth/containerHeight;
+
+    dim.height = containerHeight;
+    dim.width = parseInt(containerHeight * this.mapAspectratio);
+    dim.scale = (dim.height/this.mapHeight)*this.zoom;
+    console.log("radar size");
+    console.log(dim);
 
     return dim;
 };
 
-SMHIRadarUI.prototype.setDimension = function(dim){
+UiSMHIRadar.prototype.setDimension = function(){
 
-    /*this.canvas.width = dim.width;
+    var dim = this._calcDimension();
+
+    this.canvas.width = dim.width;
     this.canvas.height = dim.height;
-    $(this.canvas).height(dim.height);
+    /*$(this.canvas).height(dim.height);
     $(this.canvas).width(dim.width);*/
 
+    this.canvas.getContext("2d").scale(dim.scale, dim.scale);
     //this.canvas.getContext("2d").scale((this.height/this.SMHIMapHeight)*this.view.zoom, (this.height/this.SMHIMapHeight)*this.view.zoom);
     //this.canvas.getContext("2d").scale(dim.height/this.SMHIMapHeight, dim.height/this.SMHIMapHeight);
 
     this.render();
 };
 
-SMHIRadarUI.prototype.nextRadar = function(me){
+UiSMHIRadar.prototype.nextRadar = function(me){
     if(me.frameIndex < me.spritesRadar.length){
         me.render();
         me.frameIndex++;
@@ -145,15 +155,15 @@ SMHIRadarUI.prototype.nextRadar = function(me){
     }
 };
 
-SMHIRadarUI.prototype.render = function(){
-    this.renderBase();
+UiSMHIRadar.prototype.render = function(){
+    this._renderBase();
     //this.spritesRadar[this.frameIndex].render(this.view.x, this.view.y);
     if(this.spritesRadar.length > 0) {
         this.spritesRadar[this.frameIndex].render(0, 0);
     }
 };
 
-SMHIRadarUI.prototype.renderBase = function(){
+UiSMHIRadar.prototype._renderBase = function(){
 
     for(var i =0; i < this.spritesBase.length; i++){
         //this.spritesBase[i].render(this.view.x, this.view.y);

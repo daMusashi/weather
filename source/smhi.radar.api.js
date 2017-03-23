@@ -2,11 +2,10 @@
  * Created by Martin on 2015-12-10.
  */
 
-function SMHIRadarAPI(numLatestRadars, onUpdatedListiner, onUpdatedListinerSource){
+function SMHIRadarAPI(numLatestRadars, onUpdatedHandler){
     this.radars = [];
     this.numLatestRadars = numLatestRadars;
-    this.listener = onUpdatedListiner || null;
-    this.listenerSource = onUpdatedListinerSource || null;
+    this.onUpdatedHandler = onUpdatedHandler || null;
 }
 
 SMHIRadarAPI.prototype.update = function(){
@@ -20,7 +19,7 @@ SMHIRadarAPI.prototype.update = function(){
             format: "png"
         })
         .done(function( data ) {
-            //console.log("radar-data har laddats");
+            console.log("SMHI radar API: data har laddats");
             //console.log(data);
 
             var radarImgNum = me.numLatestRadars; // var 5:e minut = 60 mmin -> 12 bilder
@@ -36,19 +35,14 @@ SMHIRadarAPI.prototype.update = function(){
             me.radars.reverse(); // l�gger r�tt igen kronologiskt
             //console.log(radars);
 
-            if(me.listener) {
-                if (me.listenerSource) {
-                    me.listener.call(me.listenerSource, me.radars);
-                } else {
-                    me.listener(me.radars);
-                }
-            }
+            me.onUpdatedHandler.handlerCall(me.radars);
+
         })
         .fail(function() {
             // TODO kan vara att data f�r dagen inte existerar �n, prova med f�rg�ende dag
             // inte bara att g�ra med dag - 1, kan bli loop
 
-            console.log( "VARNING! Kunde inte h�mta radar-data fr�n SMHI" );
+            console.log( "VARNING! Kunde inte hämta radar-data från SMHI" );
         });
 };
 

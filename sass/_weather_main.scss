@@ -30,51 +30,5 @@ body {
   }
 }
 
-#frame {
-  .panel {
-    background-color: transparent;
-  }
 
-  #panel-main {
-    opacity: 1;
-  }
-
-  #panel-header {
-    #plats {
-      padding-left: 0; // sätts till $sidepanel-button-size (kollas upp) i responsify.js
-    }
-  }
-}
-
-
-/* x-small  > 480 */
-
-@media (min-width: 480px) {
-  #frame {
-    margin: $frames-min-margin;
-  }
-}
-
-/* small  > 768 */
-
-@media (min-width: $screen-sm-min) {
-  #frame {
-    margin: $frames-min-margin;
-  }
-}
-
-/* medium > 992 */
-
-@media (min-width: $screen-md-min) {
-  #frame {
-    margin: $frames-min-margin;
-  }
-}
-
-/* large > 1200 */
-
-@media (min-width: $screen-lg-min) {
-
-
-}
 

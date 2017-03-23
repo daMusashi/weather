@@ -1,0 +1,23 @@
+$color-axis: $color-body-grad-lighter;
+$color-axis-text: $color-axis;
+$color-axis-label: lighten($color-axis-text, 20%);
+$color-values: $color-hero;
+
+#d3-chart-container {
+  .axis {
+    path, line {
+      stroke: $color-axis;
+    }
+    text {
+      fill: $color-axis-text;
+    }
+
+    .label {
+      fill: $color-axis-label;
+    }
+  }
+
+  .values {
+    stroke: $color-values;
+  }
+}

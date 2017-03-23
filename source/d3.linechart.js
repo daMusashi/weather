@@ -1,9 +1,9 @@
 function D3Linechart(containerId) {
     this.containerId = containerId;
-    this.id = "weather-data-viz-container";
+    this._id = "weather-data-viz-container";
 
     this.dom = document.createElement("div");
-    $(this.dom).attr("id", this.id);
+    $(this.dom).attr("_id", this._id);
 
     $("#"+this.containerId).append(this.dom);
 
@@ -29,7 +29,7 @@ function D3Linechart(containerId) {
     this.timeformat = "%A %d"; // https://github.com/mbostock/d3/wiki/Time-Formatting
     this.width = 900;
     this.height = 400;
-    this.margins = {
+    this.padding = {
         top: 20,
         right: 50,
         bottom: 20,
@@ -96,25 +96,25 @@ D3Linechart.prototype._createChartDayNightNederbord = function(chartData){
 
 
 
-    var viz = d3.select("#"+this.id)
+    var viz = d3.select("#"+this._id)
         .append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
-        .attr("id", this.id + "-svg");
+        .attr("_id", this._id + "-svg");
 
     viz.append('svg:g')
         .attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + (this.height - this.margins.bottom) + ')')
+        .attr('transform', 'translate(0,' + (this.height - this.padding.bottom) + ')')
         .call(xAxis);
 
     viz.append('svg:g')
         .attr('class', 'y axis')
-        .attr('transform', 'translate(' + (this.margins.left) + ',0)')
+        .attr('transform', 'translate(' + (this.padding.left) + ',0)')
         .call(yAxisTemp );
 
     viz.append('svg:g')
         .attr('class', 'y axis')
-        .attr('transform', 'translate(' + (this.width - this.margins.right) + ',0)')
+        .attr('transform', 'translate(' + (this.width - this.padding.right) + ',0)')
         .call(yAxisNederbord);
 
     // linjer
@@ -183,7 +183,7 @@ D3Linechart.prototype._createYaxisTemp = function(chartData, axisSide) {
         return d.y;
     }) + 2 ])
     // range - skalans omfång
-    yScale.range([this.height - this.margins.top, this.margins.bottom]);
+    yScale.range([this.height - this.padding.top, this.padding.bottom]);
 
     // axis
     var yAxis = d3.svg.axis()
@@ -209,7 +209,7 @@ D3Linechart.prototype._createYaxisNederbord = function(chartData, axisSide) {
     })])*/
     yScale.domain([0.0, 6.0]);
     // range - skalans omfång
-    yScale.range([this.height - this.margins.top, this.margins.bottom]);
+    yScale.range([this.height - this.padding.top, this.padding.bottom]);
 
     // axis
     var yAxis = d3.svg.axis()
@@ -232,7 +232,7 @@ D3Linechart.prototype._createXaxisTime = function(chartData){
     })])
 
     // range - skalans omfång
-    xScale.range([this.margins.left, this.width - this.margins.right]);
+    xScale.range([this.padding.left, this.width - this.padding.right]);
 
     // axis
     var xAxis = d3.svg.axis()

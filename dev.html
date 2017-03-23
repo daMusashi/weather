@@ -2,14 +2,14 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Väderprogros från SMHI</title>
 
-    <link rel="stylesheet" type="text/css" href="css/bootswatch.css">
     <link rel="stylesheet" type="text/css" href="css/weather.css">
 
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="libs/d3.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="libs/iscroll.js"></script>
     <script src="source/config.js"></script>
     <script src="source/logic.date.js"></script>
@@ -21,7 +21,7 @@
     <script src="source/google.map.api.js"></script>
     <script src="source/google.map.ui.js"></script>
     <script src="source/google.place.manager.js"></script>
-    <script src="source/smhi.radar.ui.js"></script>
+    <script src="source/ui.smhi.radar.js"></script>
     <script src="source/smhi.radar.api.js"></script>
     <script src="source/provider.api.smhi.js"></script>
     <script src="source/provider.dataadapter.smhi.js"></script>
@@ -31,11 +31,12 @@
     <script src="source/forecast.data.day.js"></script>
     <script src="source/forecast.dataset.heroitems.js"></script>
     <script src="source/forecast.manager.js"></script>
-    <script src="source/smhi.forecast.ui.js"></script>
     <script src="source/ui.panel.js"></script>
     <script src="source/ui.forecast.day.js"></script>
+    <script src="source/ui.forecast.days.js"></script>
     <script src="source/ui.forecast.dataitem.js"></script>
     <script src="source/ui.forecast.next.js"></script>
+    <script src="source/ui.forecast.graph.js"></script>
     <script src="source/ui.canvas.sprite.js"></script>
     <script src="source/ui.header.js"></script>
     <script src="source/ui.footer.js"></script>
@@ -44,27 +45,29 @@
     <script src="source/ui.dialogs.js"></script>
     <script src="source/ui.js"></script>
     <script src="source/ui.windarrow.js"></script>
-    <script src="source/d3.linechart.js"></script>
+    <script src="source/ui.d3.linechart.js"></script>
     <script src="source/app.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPkWzKCNHOP_qJJbd15Wk8OmIrUcJvCjE&signed_in=true&callback=apiloaded" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAPkWzKCNHOP_qJJbd15Wk8OmIrUcJvCjE&signed_in=true" async defer></script>
 </head>
 <body>
     <div id="backdrop" class="winter day"></div>
     <div id="frame">
-        <header id="panel-header" class="panel"></header>
-        <main id="content">
-            <div id="panel-statistics" class="panel">
+        <header id="header" class="panel"></header>
+        <main id="content"  class="container-fluid">
+            <div class="col-md-5 column">
                 <div id="panel-next" class="panel"></div>
-                <div id="panel-graph" class="panel"></div>
                 <div id="panel-radar" class="panel"></div>
             </div>
-            <div id="panel-days" class="panel"></div>
+            <div class="col-md-7 column">
+                <div id="panel-graph" class="panel"></div>
+                <div id="panel-days" class="panel"></div>
+            </div>
         </main>
-        <footer id="panel-footer" class="panel"></footer>
+        <footer id="footer" class="panel"></footer>
 
         <aside id="panel-map" class="panel side-panel"></aside>
-        <aside id="panel-radarr" class="panel side-panel"></aside>
     </div>
+    <div id="wait-modal-wait" class="modal wait fade in" role="dialog" data-backdrop="false" style="display: block;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header" style="display: none;"><button class="close" type="button" data-dismiss="modal">×</button><h4 class="modal-title"></h4></div><div class="modal-body">Laddar app...</div></div></div></div>
 </body>
 <script>
 

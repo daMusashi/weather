@@ -4,9 +4,12 @@
 function CONFIG() {}
 
 // html-bindnings
-CONFIG.nextPanelContainerId = "panel-next";
-CONFIG.daysPanelContainerId = "panel-days";
+CONFIG.headerContainerId = "header";
+CONFIG.nextContainerId = "panel-next";
+CONFIG.daysContainerId = "panel-days";
 CONFIG.radarContainerId = "panel-radar";
+CONFIG.graphContainerId = "panel-graph";
+CONFIG.footerContainerId = "footer";
 
 CONFIG.maxDays = 8;
 

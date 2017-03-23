@@ -2,17 +2,14 @@
  * Created by Martin on 2015-12-27.
  */
 
-$(document).ready(function(){
-    Weather.libsLoaded++;
-    console.log("Weather: Main Libs loaded ("+Weather.libsLoaded+"/"+Weather.libsToLoad+")");
-
-    if(Weather.libsLoaded == Weather.libsToLoad) {
-        Weather.init();
-    }
-})
+//$(document).ready(function(){
+$(window).on("load", function(){
+    Weather.setup();
+    //console.log("Weather: Main Libs loaded ("+Weather.libsLoaded+"/"+Weather.libsToLoad+")");
+});
 
 
-// Google API kan vara färdigtladdat EFTER document.ready
+/* // Google API kan vara färdigtladdat EFTER document.ready
 function apiloaded(){
     Weather.libsLoaded++;
     console.log("Weather: External Lib loaded ("+Weather.libsLoaded+"/"+Weather.libsToLoad+")");
@@ -21,7 +18,7 @@ function apiloaded(){
         Weather.init();
     }
 
-}
+}*/
 
 /**
  * Appens main objekt. Statiskt objekt.
@@ -29,38 +26,27 @@ function apiloaded(){
  */
 function Weather(){}
 
-Weather.libsToLoad = 2;
-Weather.libsLoaded = 0;
+//Weather.libsToLoad = 1; // kör D3 med CDN
+//Weather.libsLoaded = 0;
 
 /**
- * Initierar appen
+ * Sätter upp appen
  */
-Weather.init = function(){
-    console.log("Weather: _app Init");
-
+Weather.setup = function(){
+    console.log("Weather: Setup");
     /**
      * Håller UI
-     * @type {WeatherUI}
+     * @type {UiManager}
      */
-    this.ui = new WeatherUI(this);
+    this.ui = new UiManager();
     /**
      * Håller aktuell plats
      * @type {GooglePlaceManager}
      */
-    this.plats = new GooglePlaceManager(this);
-    this.plats.addOnChangeListener(new Handler(platsChanged));
+    this.plats = null; // väntar med init till init() så att Google API är laddat
 
     //radar.start();
-    /**
-     * Håller UI Header
-     * @type {HeaderUI}
-     */
-    this.header = new HeaderUI(document.getElementById("panel-header"));
-    /**
-     * Håller UI Foter
-     * @type {FooterUI}
-     */
-    this.footer = new FooterUI(document.getElementById("panel-footer"));
+
     /**
      * Håller aktuellt dataset
      * @type {ForecastManager}
@@ -68,14 +54,32 @@ Weather.init = function(){
     this.forecast = new ForecastManager(this); // inner för scrollning
     this.forecast.addOnChangeListener(new Handler(forecastChanged, this));
 
-    /*radarUI = new SMHIRadarUI(document.getElementById("weather-heroes"), 300);
+    /*radarUI = new UiSMHIRadar(document.getElementById("weather-heroes"), 300);
      radarAPI = new SMHIRadarAPI(24, "start", radarUI);
 
      radarAPI.update();*/
 
-    this.footer.updateTimers(this.footer);
-    setInterval(this.footer.updateTimers, 10*1000, this.footer);
-    setInterval(function(){this.forecast.update()}, 10*60*1000);
+    $("#wait-modal-wait").modal();
+    $("#wait-modal-wait").modal("hide");
+
+    //if(Weather.libsLoaded == Weather.libsToLoad) {
+        Weather.init();
+    //}
+};
+
+
+/**
+ * Initierar appen
+ */
+Weather.init = function(){
+    console.log("Weather: Init");
+
+    /**
+     * Håller aktuell plats
+     * @type {GooglePlaceManager}
+     */
+    this.plats = new GooglePlaceManager(this);
+    this.plats.addOnChangeListener(new Handler(platsChanged));
 
     this.plats.findPlace();
 
@@ -83,7 +87,7 @@ Weather.init = function(){
     this.ui.manageLayout();
 
     $(window).on("resize", function(){
-        Weather.ui.manageLayout();
+        this.ui.manageLayout();
     });
 };
 
@@ -96,18 +100,14 @@ Weather.init = function(){
 function platsChanged(placeData){
     console.log("Weather: Plats ändrad");
     Weather.forecast.update(placeData);
-    Weather.header.setPlatsnamn(placeData.getString());
-    //UIDialogFactory.showError("hallå");
 }
 
 // när kartplats ändrats av user - aktiverar platsChanged
 function mapChanged(latLong){
     console.log("MAP CHANGED");
-    this.ui.closeMap();
     plats.setCoord(latLong.lat, latLong.long);
 }
 
-function forecastChanged(forecastData){
-    //console.log(forecastData);
-    Weather.footer.setForecastTime(forecastData.approvedTime);
+function forecastChanged(dataset){
+    this.ui.update(dataset);
 }

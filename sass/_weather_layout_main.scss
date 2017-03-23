@@ -10,116 +10,85 @@
 }
 
 // för styling se _weather_header
-#panel-header {
-
+#header {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  height: $header-height;
 }
 
 #content {
-  display: flex;
-  flex-direction: column;
+  //display: flex;
+  //flex-direction: column;
+  position: absolute;
+  top: $header-height;
+  right: 0px;
+  left: 0px;
+  bottom: $footer-height;
 
-  #panel-statistics {
-    // som item
-    flex: 1;
-    // som container
+  .column {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-direction: column;
+    height: 100%;
 
-    #panel-next {
+    .panel {
       flex: 1;
     }
-    #panel-graph {
-      flex: 1;
+  }
+
+
+  #panel-next {
+    #next-container {
+      height: 100%;
     }
-    #panel-radar {
-      flex: 1;
+  }
+  #panel-graph {
+    #graph-container {
+      @include cover();
+      article {
+        flex: 1 0 auto;
+
+      }
+    }
+  }
+  #panel-radar {
+    flex: 1;
+    height: 100%;
+    #radar-container {
+      height: 100%;
       canvas {
         height: 100%;
       }
     }
-
   }
 
+
   #panel-days {
-    // som item
     flex: 1;
-    // som container
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+
+    #days-container {
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
   }
 }
 
 // för styling se _weather_footer
-#panel-footer {
-
+#footer {
+  position: absolute;
+  height: $footer-height;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
 }
 
 
 
-/* FLEX */
-.flex-container {
-  display: flex;
-}
 
-.flex-item {
-  //flex: 1 0 auto;
-  flex-grow: 1;
-  flex-shrink: 0;
-  flex-basis: auto;
-}
 
-/* Side panels map och radar i egen SCSS (sidepnales) */
-
-$header-sm-title-height: $header-min-title-height + 0.5em;
-$header-md-title-height: $header-min-title-height + 1em;
-$header-lg-title-height: $header-min-title-height + 1.5em;
-
-/* x-small  > 480 */
-
-@media (min-width: 480px) {
-
-}
-
-/* small  > 768 */
-
-@media (min-width: $screen-sm-min) {
-  #frame {
-    margin: $frames-min-margin + 0.5em;
-  }
-
-  #panel-header {
-    #plats {
-      font-size: $header-sm-title-height;
-    }
-  }
-}
-
-/* medium > 992 */
-
-@media (min-width: $screen-md-min) {
-  #panel-header {
-
-    #plats {
-      font-size: $header-md-title-height;
-    }
-
-  }
-}
-
-/* large > 1200 */
-
-@media (min-width: $screen-lg-min) {
-  #panel-header {
-
-    #plats {
-      font-size: $header-lg-title-height;
-    }
-
-  }
-
-}
 
 
 

@@ -5,37 +5,57 @@
  * Manager för UI:n
  * @constructor
  */
-function WeatherUI(){
+function UiManager(){
     /**
      * Håller radarbild
-     * @type {SMHIRadarUI}
+     * @type {UiSMHIRadar}
      */
     this.radar = null;
+
+    this.header = new UiHeader();
+    this.nextBox = new UiForecastNextInfo();
+    this.daysBox = new UiForecastDaysPanel();
+    this.graphBox = new UiForecastGraph();
+    this.footer = new UiFooter();
+
+    //this.viz = new D3Chart();
 }
 
-WeatherUI.prototype.init = function() {
+UiManager.prototype.init = function() {
 
-    this.radar = new SMHIRadarUI(document.getElementById(CONFIG.radarContainerId));
+    this.radar = new UiSMHIRadar(document.getElementById(CONFIG.radarContainerId));
 
-    // scrollers
-    // http://iscrolljs.com/
-    /*var daysScroller = new IScroll('#panel-days', {
-        scrollY: false,
-        scrollX: true,
-        scrollbars: true,
-        snap: 'div',
-        interactiveScrollbars: true
-
-    });*/
+    // lägger till header
+    document.getElementById(CONFIG.headerContainerId).appendChild(this.header.getDOM());
+    // lägger till next
+    document.getElementById(CONFIG.nextContainerId).appendChild(this.nextBox.getDOM());
+    // lägger till days
+    document.getElementById(CONFIG.daysContainerId).appendChild(this.daysBox.getDOM());
+    // lägger till graph
+    document.getElementById(CONFIG.graphContainerId).appendChild(this.graphBox.getDOM());
+    // lägger till footer
+    document.getElementById(CONFIG.footerContainerId).appendChild(this.footer.getDOM());
 
 };
 
+UiManager.prototype.update = function(dataset){
+    console.log("UI Manager: update with dataset...");
+    console.log(dataset);
 
-WeatherUI.prototype.manageLayout = function(){
+    this.daysBox.update(dataset);
+    this.nextBox.update(dataset.heroItems);
+    this.header.update(dataset);
+    this.graphBox.update(dataset);
+
+    this.radar.update();
+};
+
+
+UiManager.prototype.manageLayout = function(){
     console.log("Weather: UI manginging layout & sizes");
 
     // radar - behöver beräknas och ändras i JS, då canvasen behöver skalas med JS, räcker inte med CSS
-    var radarDim = this.radar.calcDimension();
+    var radarDim = this.radar._calcDimension();
 
     //$("#panel-radar").width(radarDim.width + buttonWidth);
     //$("#panel-radar").css("right", radarDim.width);
@@ -45,7 +65,7 @@ WeatherUI.prototype.manageLayout = function(){
 
 };
 
-WeatherUI.prototype.responsify = function() {
+UiManager.prototype.responsify = function() {
     //var width = $(document).outerWidth(true);
     //var height = $(document).outerHeight(true);
 

@@ -1,67 +1,77 @@
 /**
  * Created by Martin on 2015-12-16.
  */
-function HeaderUI(container){
+function UiHeader(){
 
     //this.pageRead = new Date();
 
-    this.container = container;
+    this._platsnamnId = "plats-namn";
+    this._providesId = "provider-info";
+    this._bytplatsIdId = "button-byt-plats";
 
-    var platsContainer = document.createElement("h2");
-    $(platsContainer).attr("id", "plats");
+    this.box = document.createElement("div");
+    $(this.box).attr("id", "header-container");
+    $(this.box).addClass("ui-container");
 
-    var platsNamn = document.createElement("span");
-    $(platsNamn).attr("id", "plats-namn");
-    $(platsNamn).text("Ingen plats vald...");
+    var leftContainer = $("<div>");
+    $(leftContainer).addClass("pull-left");
 
-    platsContainer.appendChild(platsNamn);
+    var placeButton = $("<button>");
+    $(placeButton).attr("_id", this._bytplatsIdId);
+    $(placeButton).text("Byt plats");
+    $(placeButton).addClass("btn");
+    $(placeButton).addClass("btn-xs");
+    $(placeButton).addClass("btn-primary");
 
-    /*var tidContainer = document.createElement("p");
-    $(tidContainer).attr("id", "tid");
-    var tidHTML = 'Sidan uppdateras: <span id="tid-sida">alldeles nyss</span> | Prognosen uppdaterades: <span id="tid-prognos">ingen prognos än</span>';
-    tidContainer.innerHTML = tidHTML;*/
+    var plats = document.createElement("h2");
+    $(plats).attr("id", this._platsnamnId);
+    $(plats).text("Ingen plats vald...");
 
-    this.container.appendChild(platsContainer);
-    //this.container.appendChild(tidContainer);
+    $(leftContainer).append(plats);
+    $(leftContainer).append(placeButton);
 
-    //this.forecastApprovedDateobject = null;
+    $(this.box).append(leftContainer);
+
+    var rightContainer = $("<div>");
+    $(rightContainer).addClass("pull-right");
+
+    var provider = document.createElement("span");
+    $(provider).attr("id", this._providesId);
+    $(provider).text("Ingen data laddad...");
+
+    $(rightContainer).append(provider);
+
+    $(this.box).append(rightContainer);
+
+    this.interval = null;
 
     var me = this;
 
 
-
-    /*this.updateTimers(this);
     var i = setInterval(this.updateTimers, 10*1000, this);
 
-    var ii = setInterval(function(){location.reload()}, 30*60*1000);*/
+    //var ii = setInterval(function(){location.reload()}, 30*60*1000);
 
 }
 
-/*HeaderUI.prototype.updateeTimers = function(me){
+UiHeader.prototype.updateTimers = function(me){
     var now = new Date();
-    var sidUpdDiff = me.pageRead.diff(now);
-    $("#tid-sida").text(sidUpdDiff.getShortDurationString() + " sedan ("+me.pageRead.getTimeString()+")");
 
-    if(me.forecastApprovedDateobject){
-        var progUpdDiff = me.pageRead.diff(me.forecastApprovedDateobject);
-        $("#tid-prognos").text(progUpdDiff.getShortDurationString() + " sedan ("+me.forecastApprovedDateobject.getTimeString()+")");
-    } else {
-        $("#tid-prognos").text("väntar på data...");
-    }
-
-}*/
-
-HeaderUI.prototype.setPlatsnamn = function(namn){
-    $("#plats-namn").text(namn);
 }
 
-/*HeaderUI.prototype.setForecastTime = function(approvedDateobject){
-    this.forecastApprovedDateobject = approvedDateobject;
-    this.updateTimers(this);
-}*/
+/**
+ * Uppdaterar infon i headern
+ * @param {ForecastDataset} dataset - Dataset att uppdaera med
+ */
+UiHeader.prototype.update = function(dataset){
+    $("#"+this._platsnamnId).text(dataset.plats.getString());
+    $("#"+this._providesId).text("Källa: "+dataset.provider);
+};
 
 
-HeaderUI.prototype.addKarta = function(kartDOM){
-    $("#kart-wrapper").append(kartDOM);
-}
+UiHeader.prototype.getDOM = function(){
+    return this.box;
+};
+
+
 

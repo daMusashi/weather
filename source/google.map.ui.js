@@ -21,13 +21,13 @@ function GoogleMapUI(container, defaultLat, defaultLong) {
     this.mapAPI = new GoogleMapAPI(lat, long, zoom);
 
     this.mapWrapper = document.createElement("div");
-    $(this.mapWrapper).attr("id", "map-wrapper");
+    $(this.mapWrapper).attr("_id", "map-wrapper");
 
     var buttonWrapper = document.createElement("div");
-    $(buttonWrapper).attr("id", "map-button-wrapper");
+    $(buttonWrapper).attr("_id", "map-button-wrapper");
     $(buttonWrapper).addClass("sidepanel-button");
     this.button = document.createElement("a");
-    $(this.button).attr("id", "map-button");
+    $(this.button).attr("_id", "map-button");
     $(this.button).text(" ");
 
     buttonWrapper.appendChild(this.button);

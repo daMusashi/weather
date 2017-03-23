@@ -21,7 +21,7 @@
     <script src="source/forecast.dataitem.js"></script>
     <script src="source/forecast.dataitem.parameter.js"></script>
     <script src="source/forecast.data.day.js"></script>
-    <script src="source/d3.linechart.js"></script>
+    <script src="source/__ui.d3.linechart.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/bootswatch.css">
     <link rel="stylesheet" type="text/css" href="css/weather.css">
@@ -68,7 +68,7 @@
             api = new ProviderAPISMHI();
             api.addOnChangeListener(new Handler(dataChanged));
 
-            viz = new D3Linechart("viz");
+            viz = new D3Chart("viz");
         }
 
         function platsChanged(platsData){

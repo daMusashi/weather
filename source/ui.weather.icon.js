@@ -24,7 +24,7 @@ function WeatherIcon(dataItem, type){
     //this.width = this.height * this.scale;
 
     this.canvas = document.createElement("canvas");
-    this.canvas.id = "weaher-icon-"+this.type+"-"+this._data.id;
+    this.canvas._id = "weaher-icon-"+this.type+"-"+this._data._id;
     this.canvas.width = this.size;
     this.canvas.height = this.size;
 

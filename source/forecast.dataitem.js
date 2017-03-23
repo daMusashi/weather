@@ -41,10 +41,10 @@ function ForecastDataItem(datetimeUTC){
 
     var idBase = this.date + this.time;
     /**
-     * Ett unikt id för data itemet
+     * Ett unikt _id för data itemet
      * @type {string}
      */
-    this.id = idBase.replace(/\D/g,'');
+    this._id = idBase.replace(/\D/g,'');
 
 
 

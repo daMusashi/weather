@@ -2,13 +2,13 @@
  * Created by Martin on 2016-01-13.
  */
 function UiPanel(id, classesArray){
-    this.id = id;
+    this._id = id;
     this.panels = [];
     var classes = classesArray || [];
 
     this.box = document.createElement("div");
     $(this.box).addClass("weather-panel");
-    $(this.box).attr("id", this.id);
+    $(this.box).attr("id", this._id);
 
     for(var i = 0; i < classes.length; i++){
         $(this.box).addClass(classes[i]);
@@ -72,8 +72,8 @@ UiPanel.prototype.removeClass = function(oldClass){
 };
 
 UiPanel.prototype.setId = function(id){
-    this.id = id;
-    this.box.id = id;
+    this._id = id;
+    this.box._id = id;
 };
 
 UiPanel.prototype.clear = function(dom){
@@ -82,6 +82,10 @@ UiPanel.prototype.clear = function(dom){
 
 UiPanel.prototype.append = function(dom){
     $(this.content).append(dom);
+};
+
+UiPanel.prototype.appendTo = function(dom){
+    $(dom).append(this.box);
 };
 
 UiPanel.prototype.getDOM = function(){

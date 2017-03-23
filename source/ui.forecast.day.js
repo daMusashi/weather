@@ -7,7 +7,7 @@
 
 /**
  * Håller DOM för en dag UI. Datan för dagen, {@link ForecastDay}, är inte fast hållen utan uppdateras med update(). Dvs DOM'en ligger hela tiden kvar, men datan, dagen, ändras.
- * @param {string} id - HTML-id för containern
+ * @param {string} id - HTML-_id för containern
  * @param {Array} classesArray - Klasser att sätta på containern
  * @constructor
  */

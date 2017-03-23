@@ -1,11 +1,15 @@
 /**
  * Created by Martin on 2015-12-15.
  */
-function GooglePlaceManager(app){
-
-    this._app = app;
+function GooglePlaceManager(){
 
     this.mapContainerId = "panel-map";
+
+    /**
+     * Håller senaste returdatan
+     * @type {GooglePlaceData}
+     */
+    this.data = null;
 
     this.onChangeListers = new HandlerStack();
 
@@ -17,11 +21,10 @@ function GooglePlaceManager(app){
     this.place.addOnChangeListener(new Handler(this._onPlaceChange, this));
 
     this.platsTitle  = document.createElement("h2");
-    $(this.platsTitle).attr("id", "plats-title");
+    $(this.platsTitle).attr("_id", "plats-title");
 
     this.gettingModalDOM = new UIDialogFactory.getWaitModalDOM("Hämtar plats...");
     this.notFoundModalDOM = new UIDialogFactory.getMessageModalDOM("Plats okänd", "<p>Kunde inte hämta din plats.</p><p>Det kan bero på att du inte tillåter det (webbläsare) eller inte har positions-funktion påslagen (mobilt)</p><p><strong>Välj en plats från kartan</strong></p>");
-
 }
 
 
@@ -37,7 +40,6 @@ GooglePlaceManager.prototype.addOnChangeListener = function(listener){
 // när kartplats ändrats av user
 GooglePlaceManager.prototype._onMapChange = function(latLong){
     console.log("Weather: Kartplats ändrad");
-    this._app.ui.closeMap();
     this.setCoord(latLong.lat, latLong.long);
 }
 
@@ -50,6 +52,7 @@ GooglePlaceManager.prototype._onPlaceChange = function(googlePlaceData){
 
     $(this.platsTitle).text(googlePlaceData.getString());
 
+    this.data = googlePlaceData;
     this.onChangeListers.handlerCall(googlePlaceData);
 };
 
@@ -79,8 +82,6 @@ GooglePlaceManager.prototype.findPlace = function(){
         $(me.gettingModalDOM).modal("hide");
         console.log("Weather: PLATS KUNDE INTE HITTAS (eller användaren blockar). Visar karta.");
         $(me.notFoundModalDOM).modal();
-        me._app.ui.openMap();
-
     }
 
     navigator.geolocation.getCurrentPosition(placeSuccess, placeFail, options);

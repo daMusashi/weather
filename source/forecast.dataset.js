@@ -9,6 +9,11 @@
  */
 function ForecastDataset(approvedTimeUTC){
     /**
+     * Platsobjekt för vilken datan gäller
+     * @type {GooglePlaceData}
+     */
+    this.plats = null;
+    /**
      * Tiden då datasetet skapades/godkändes hos provider (tiden då prognoserna beräknandes/gäller för)
      * @type {Date}
      */
