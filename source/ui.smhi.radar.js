@@ -45,9 +45,10 @@ function UiSMHIRadar(container){
 
     this.zoom = 1;
 
-    this.box = new UiPanel("radar-container");
-    $(this.box).addClass("ui-container");
+    this.box = new UiPanel("radar-container", ["ui-container"], true);
     this.box.setHeader("Radar");
+    this.box.onExpandedHandler = new Handler(this._onUpscale, this);
+    this.box.onCollapseHandler = new Handler(this._onDownscale, this);
 
     //this.radarWrapper = document.createElement("div");
     //$(this.radarWrapper).attr("_id", "radar-container");
@@ -61,7 +62,7 @@ function UiSMHIRadar(container){
     //this.radarWrapper.appendChild(this.canvas);
     this.box.append(this.canvas);
 
-    this.setDimension();
+    this.calcAndSetDimension();
 
 
     // basemaps sprites
@@ -108,37 +109,43 @@ UiSMHIRadar.prototype._start = function(radarMaps){
 
 };
 
-UiSMHIRadar.prototype._calcDimension = function(){
+UiSMHIRadar.prototype._onUpscale = function(){
+    this.calcAndSetDimension();
+};
 
+UiSMHIRadar.prototype._downUpscale = function(){
+    this.setDimension(5, 5, 1);
+    this.calcAndSetDimension();
+};
+
+UiSMHIRadar.prototype.calcAndSetDimension = function(){
+
+    var boxDim = this.box.getContentDim();
+    console.log("RADAR CALC box size");
+    console.log(boxDim);
     var dim = {};
 
-    var containerHeight = $(this.container).height();
-    var containerWidth = $(this.container).width();
-    var containerAspectratio = containerWidth/containerHeight;
-
-    dim.height = containerHeight;
-    dim.width = parseInt(containerHeight * this.mapAspectratio);
+    dim.height = boxDim.height;
+    dim.width = parseInt(boxDim.height * this.mapAspectratio);
     dim.scale = (dim.height/this.mapHeight)*this.zoom;
     console.log("radar size");
     console.log(dim);
 
-    return dim;
+    this.setDimension(dim.width, dim.height, dim.scale);
 };
 
-UiSMHIRadar.prototype.setDimension = function(){
+UiSMHIRadar.prototype.setDimension = function(width, height, scale){
 
-    var dim = this._calcDimension();
-
-    this.canvas.width = dim.width;
-    this.canvas.height = dim.height;
+    this.canvas.width = width;
+    this.canvas.height = height;
     /*$(this.canvas).height(dim.height);
     $(this.canvas).width(dim.width);*/
 
-    this.canvas.getContext("2d").scale(dim.scale, dim.scale);
+    this.canvas.getContext("2d").scale(scale, scale);
     //this.canvas.getContext("2d").scale((this.height/this.SMHIMapHeight)*this.view.zoom, (this.height/this.SMHIMapHeight)*this.view.zoom);
     //this.canvas.getContext("2d").scale(dim.height/this.SMHIMapHeight, dim.height/this.SMHIMapHeight);
 
-    this.render();
+    //this.render();
 };
 
 UiSMHIRadar.prototype.nextRadar = function(me){

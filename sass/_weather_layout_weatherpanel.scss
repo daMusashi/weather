@@ -1,12 +1,14 @@
 /* Inre layout weather-panels */
 
-.weather-panel {
+.ui-panel.weather-panel {
   // som flex-panel
   display: flex;
   flex-direction: column;
   // som flex-item
   flex: 1 0 auto;
   margin: $panel-gutter/2;
+
+  min-width: $weather-panel-min-width;
 
   header {
     //flex: 1 0 auto;

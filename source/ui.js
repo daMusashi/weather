@@ -55,7 +55,7 @@ UiManager.prototype.manageLayout = function(){
     console.log("Weather: UI manginging layout & sizes");
 
     // radar - behöver beräknas och ändras i JS, då canvasen behöver skalas med JS, räcker inte med CSS
-    var radarDim = this.radar._calcDimension();
+    //var radarDim = this.radar.calcAndSetDimension();
 
     //$("#panel-radar").width(radarDim.width + buttonWidth);
     //$("#panel-radar").css("right", radarDim.width);

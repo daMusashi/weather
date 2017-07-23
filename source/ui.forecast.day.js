@@ -16,7 +16,7 @@ function UiForecastDay(id, classesArray){
 
     var htmlId = id || "weatherday-"+Math.floor((Math.random() * 100) + 1)+"-"+Math.floor((Math.random() * 100) + 1)+"-"+Math.floor((Math.random() * 100) + 1);
     var classes = classesArray || [];
-    //classes.push("day-box");
+    classes.push("weather-panel");
 
     this.box = new UiPanel(htmlId, classes);
 }

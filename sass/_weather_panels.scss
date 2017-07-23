@@ -5,16 +5,22 @@
   position: relative;
 }
 
-.weather-panel {
+.main-panel {
+  margin: $panel-gutter;
+}
+
+.ui-panel {
   position: relative;
   left: 0;
   top: 0;
   overflow: hidden;
   text-align: center;
   font-size: 0.9em;
-  min-width: 150px;
+  display: flex;
+  flex-direction: column;
 
   @include backgroundGrad(darken($color-bg-weather-boxes, 10%), $color-bg-weather-boxes);
+
   &.weekend {
     @include backgroundGrad($color-bg-weather-boxes, lighten($color-bg-weather-boxes, 10%));
   }
@@ -28,13 +34,48 @@
     background-color: rgba(0, 0, 0, 0.2);
     padding: 0.2em;
 
+
     .title {
 
     }
+
     .subtitle {
       font-size: 0.8em;
       opacity: 0.5;
     }
   }
 
-} // weather-panel
+  article {
+    flex:auto;
+  }
+
+  .btn-expand {
+    display: none;
+  }
+  .btn-collaspe {
+    display: none;
+  }
+
+  &.expandable {
+    .btn-expand {
+      display: inline;
+    }
+    .btn-collapse {
+      display: none;
+    }
+  }
+
+  &.expanded {
+    @include cover();
+    margin: 20px;
+    z-index: 99;
+
+    .btn-expand {
+      display: none;
+    }
+    .btn-collapse {
+      display: inline;
+    }
+  }
+
+} // ui-panel

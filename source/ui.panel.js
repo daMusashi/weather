@@ -1,24 +1,34 @@
 /**
  * Created by Martin on 2016-01-13.
  */
-function UiPanel(id, classesArray){
+function UiPanel(id, classesArray, expandable){
     this._id = id;
     this.panels = [];
+    this.expandable = expandable || false;
     var classes = classesArray || [];
+    if(this.expandable){
+        classes.push("expandable");
+    }
 
     this.box = document.createElement("div");
-    $(this.box).addClass("weather-panel");
+    $(this.box).addClass("ui-panel");
+    //$(this.box).addClass("weather-panel");
     $(this.box).attr("id", this._id);
 
     for(var i = 0; i < classes.length; i++){
         $(this.box).addClass(classes[i]);
     }
 
+    this.onExpandedHandler = null;
+    this.onCollapsedHandler = null;
+
     var header = document.createElement("header");
 
     this.title = document.createElement("h2");
     $(this.title).addClass("title");
     header.appendChild(this.title);
+
+    console.log("EXPANDABLE: "+this.expandable);
 
     this.subtitle = document.createElement("p");
     $(this.subtitle).addClass("subtitle");
@@ -29,6 +39,8 @@ function UiPanel(id, classesArray){
 
     this.box.appendChild(header);
     this.box.appendChild(this.content);
+
+    this._container = null; // används av expand/collapsse
 
 }
 
@@ -61,6 +73,51 @@ UiPanel.prototype.setHeader = function(boxTitleText, boxSubtitleText){
         $(this.subtitle).addClass("hide");
     }
 
+    if(this.expandable){
+        var me = this;
+        var buttonExp = $('<button type="button" class="btn btn-sm btn-default btn-expand pull-right">');
+        $(buttonExp).html('<span class="glyphicon glyphicon-resize-full">');
+        $(buttonExp).on("click", function(){
+            me.expand();
+        });
+        $(this.title).append(buttonExp);
+
+        var buttonColl = $('<button type="button" class="btn btn-sm btn-default btn-collapse pull-right">');
+        $(buttonColl).html('<span class="glyphicon glyphicon-remove">');
+        $(buttonColl).on("click", function(){
+            me.collapse();
+        });
+        $(this.title).append(buttonColl);
+    }
+
+};
+
+UiPanel.prototype.getContentDim = function(){
+    var dim = {};
+
+    dim.width = $(this.content).width();
+    dim.height = $(this.content).height();
+
+    return dim;
+};
+
+UiPanel.prototype.expand = function(){
+    this._container = $(this.box).parent();
+    $(this.box).addClass("expanded");
+    $("body").append(this.box);
+
+    if(this.onExpandedHandler){
+        this.onExpandedHandler.handlerCall();
+    }
+};
+
+UiPanel.prototype.collapse = function(){
+    $(this.box).removeClass("expanded");
+    $(this._container).append(this.box);
+
+    if(this.onCollapsedHandler){
+        this.onCollapsedHandler.handlerCall();
+    }
 };
 
 UiPanel.prototype.addClass = function(newClass){
